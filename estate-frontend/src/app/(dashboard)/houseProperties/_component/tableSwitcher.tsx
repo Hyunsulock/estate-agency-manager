@@ -11,7 +11,7 @@ import { useQueryState } from "nuqs";
 import { useHousePropertyFilters } from "@/app/lib/useHousePropertyFilters";
 import { useEffect, useState } from "react";
 import { HousePropertyStatus, tradeTypes } from "@/components/table/types";
-import { DataFilters } from "./dataFilters";
+import { DataFilters } from "./dataFilter";
 import { jeonseColumns } from "@/components/table/jeonseColumns";
 import { rentColumns } from "@/components/table/rentColumns";
 import { DualSlider } from "@/components/ui/dualSlider";
@@ -22,7 +22,20 @@ interface UseGetHousePropertiesProps {
 }
 export const TableSwitcher = () => {
     const [
-        { status, tradeType, apartmentId, minDeposit, maxDeposit },
+        {
+            status,
+            tradeType,
+            apartmentId,
+            minDeposit,
+            maxDeposit,
+            minRent,
+            maxRent,
+            minSize,
+            maxSize,
+            offerCount,
+            unitNumber,
+            buildingNumber,
+        },
         setFilters,
     ] = useHousePropertyFilters();
     // const [filters, setFilters] = useState<UseGetHousePropertiesProps>({
@@ -35,8 +48,15 @@ export const TableSwitcher = () => {
             status,
             tradeType,
             apartmentId,
-            // minDeposit,
-            // maxDeposit,
+            minDeposit,
+            maxDeposit,
+            minRent,
+            maxRent,
+            minSize,
+            maxSize,
+            offerCount,
+            unitNumber,
+            buildingNumber,
         });
 
 

@@ -3,7 +3,20 @@ import getAccessSession from "../getAccessToken";
 import { QueryFunction } from "@tanstack/react-query";
 import { HousePropertyStatus, tradeTypes } from "@/components/table/types";
 
-export const getHouseProperties: QueryFunction<any, [_1: string, params: { status?: HousePropertyStatus | null, tradeType?: tradeTypes | null, apartmentId?: string | null}]> = async ({ queryKey }) => {
+export const getHouseProperties: QueryFunction<any, [_1: string, params: {
+    status?: HousePropertyStatus | null,
+    tradeType?: tradeTypes | null,
+    apartmentId?: string | null,
+    minDeposit?: number | null;
+    maxDeposit?: number | null;
+    minRent?: number | null;
+    maxRent?: number | null;
+    minSize?: number | null;
+    maxSize?: number | null;
+    offerCount?: number | null;
+    unitNumber?: number | null;
+    buildingNumber?: number | null;
+}]> = async ({ queryKey }) => {
     const session = await getAccessSession();
     const [_1, params] = queryKey;
     // Build query string dynamically from params

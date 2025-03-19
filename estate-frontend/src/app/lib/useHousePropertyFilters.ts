@@ -10,5 +10,10 @@ export const useHousePropertyFilters = () => {
         maxDeposit: parseAsInteger,
         minRent: parseAsInteger,
         maxRent: parseAsInteger,
+        minSize: parseAsInteger,
+        maxSize: parseAsInteger,
+        offerCount: parseAsInteger,
+        unitNumber: parseAsInteger,
+        buildingNumber: parseAsInteger
     }, { shallow: false })
 }

@@ -94,7 +94,7 @@ export class HousePropertiesService {
     );
   }
 
-  async findByQuery(userId: number, agencyId: number, tradeType: string, status: string, apartmentId: number) {
+  async findByQuery(userId: number, agencyId: number, tradeType: string, status: string, apartmentId: number, minDeposit: number, maxDeposit: number, minRent: number, maxRent: number, minSize: number, maxSize: number, offerCount: number, buildingNumber: number, unitNumber: number) {
     console.log(userId, agencyId,)
     let query = this.housePropertyRepository.createQueryBuilder('houseProperty')
       .leftJoin('houseProperty.agency', 'agency')
@@ -136,15 +136,149 @@ export class HousePropertiesService {
       .groupBy('houseProperty.id, offer.tradeType, apartment.id'); // ✅ Group by tradeType
 
     // Apply filters dynamically
+
     if (tradeType) {
-      query = query.andWhere('offer.tradeType = :tradeType', { tradeType });
+      query.andWhere("offer.tradeType = :tradeType", { tradeType });
     }
     if (status) {
-      query = query.andWhere('houseProperty.status = :status', { status })
+      query.andWhere("houseProperty.status = :status", { status });
     }
     if (apartmentId) {
-      query = query.andWhere('apartment.id = :apartmentId', { apartmentId })
+      query.andWhere("apartment.id = :apartmentId", { apartmentId });
     }
+    if (minSize) {
+      query.andWhere("houseProperty.size >= :minSize", { minSize });
+    }
+    if (maxSize) {
+      query.andWhere("houseProperty.size <= :maxSize", { maxSize });
+    }
+    if (buildingNumber) {
+      query.andWhere("houseProperty.buildingNumber = :buildingNumber", { buildingNumber });
+    }
+    if (unitNumber) {
+      query.andWhere("houseProperty.unitNumber = :unitNumber", { unitNumber });
+    }
+
+
+
+    if (tradeType === 'jeonse') {
+      if (minDeposit) {
+        query = query.having(`
+      MIN(CASE WHEN offer.tradeType = 'jeonse' THEN offer.jeonseDeposit ELSE NULL END) >= :minDeposit
+    `, { minDeposit });
+      }
+      if (maxDeposit) {
+        query = query.andHaving(`
+      MAX(CASE WHEN offer.tradeType = 'jeonse' THEN offer.jeonseDeposit ELSE NULL END) <= :maxDeposit
+    `, { maxDeposit });
+      }
+    }
+
+    if (tradeType === 'rent') {
+      if (minDeposit) {
+        query = query.having(`
+      MIN(CASE WHEN offer.tradeType = 'rent' THEN offer.rentDeposit ELSE NULL END) >= :minDeposit
+    `, { minDeposit });
+      }
+      if (maxDeposit) {
+        query = query.andHaving(`
+      MAX(CASE WHEN offer.tradeType = 'rent' THEN offer.rentDeposit ELSE NULL END) <= :maxDeposit
+    `, { maxDeposit });
+      }
+      if (minRent) {
+        query = query.andHaving(`
+      MIN(CASE WHEN offer.tradeType = 'rent' THEN offer.rentPrice ELSE NULL END) >= :minRent
+    `, { minRent });
+      }
+      if (maxRent) {
+        query = query.andHaving(`
+      MAX(CASE WHEN offer.tradeType = 'rent' THEN offer.rentPrice ELSE NULL END) <= :maxRent
+    `, { maxRent });
+      }
+    }
+
+    if (tradeType === 'sale') {
+      if (minDeposit) {
+        query = query.having(`
+      MIN(CASE WHEN offer.tradeType = 'sale' THEN offer.salePrice ELSE NULL END) >= :minDeposit
+    `, { minDeposit });
+      }
+      if (maxDeposit) {
+        query = query.andHaving(`
+      MAX(CASE WHEN offer.tradeType = 'sale' THEN offer.salePrice ELSE NULL END) <= :maxDeposit
+    `, { maxDeposit });
+      }
+    }
+
+
+    if (offerCount) {
+      query.andHaving("COUNT(offer.id) >= :offerCount", { offerCount });
+    }
+
+
+
+    
+    // if (tradeType) {
+    //   query = query.andWhere('offer.tradeType = :tradeType', { tradeType });
+    //   if (tradeType === 'jeonse') {
+    //     if (minDeposit) {
+    //       query = query.andWhere('offer.jeonseDeposit >= :minDeposit', { minDeposit });
+    //     }
+    //     if (maxDeposit) {
+    //       query = query.andWhere('offer.jeonseDeposit <= :maxDeposit', { maxDeposit });
+    //     }
+    //   }
+
+    //   if (tradeType === 'rent') {
+    //     if (minDeposit) {
+    //       query = query.andWhere('offer.rentDeposit >= :minDeposit', { minDeposit });
+    //     }
+    //     if (maxDeposit) {
+    //       query = query.andWhere('offer.rentDeposit <= :maxDeposit', { maxDeposit });
+    //     }
+    //     if (minRent) {
+    //       query = query.andWhere('offer.rentPrice >= :minRent', { minRent });
+    //     }
+    //     if (maxRent) {
+    //       query = query.andWhere('offer.rentPrice <= :maxRent', { maxRent });
+    //     }
+    //   }
+
+    //   if (tradeType === 'sale') {
+    //     if (minDeposit) {
+    //       query = query.andWhere('offer.salePrice >= :minDeposit', { minDeposit });
+    //     }
+    //     if (maxDeposit) {
+    //       query = query.andWhere('offer.salePrice <= :maxDeposit', { maxDeposit });
+    //     }
+    //   }
+    // }
+    // if (status) {
+    //   query = query.andWhere('houseProperty.status = :status', { status })
+    // }
+    // if (apartmentId) {
+    //   query = query.andWhere('apartment.id = :apartmentId', { apartmentId })
+    // }
+
+    // if (minSize) {
+    //   query = query.andWhere('houseProperty.size >= :minSize', { minSize });
+    // }
+
+    // if (maxSize) {
+    //   query = query.andWhere('houseProperty.size <= :maxSize', { maxSize });
+    // }
+
+    // if (offerCount) {
+    //   query = query.having('COUNT(offer.id) >= :offerCount', { offerCount });
+    // }
+
+    // if (buildingNumber) {
+    //   query = query.andWhere('houseProperty.buildingNumber = :buildingNumber', { buildingNumber });
+    // }
+
+    // if (unitNumber) {
+    //   query = query.andWhere('houseProperty.unitNumber = :unitNumber', { unitNumber });
+    // }
 
     let [data, count] = await query.getManyAndCount();
 

@@ -4,18 +4,31 @@ import { tradeTypes } from "@/components/table/types";
 import { DualSlider } from "@/components/ui/dualSlider";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export const RentSlider = () => {
     const [{ tradeType, minRent, maxRent }, setFilters] =
         useHousePropertyFilters();
 
+    const [localRentRange, setLocalRentRange] = useState<[number, number]>([
+        minRent ?? 0,
+        maxRent ?? 4000,
+    ]);
+
+    const handleRentChange = (newValues: any) => {
+        setLocalRentRange(newValues);
+    };
+
     const onMinRentChange = (value: number) => {
+        setLocalRentRange((prev) => [value, prev[1]]);
         setFilters((prev) => ({
             ...prev,
             minRent: value,
         }));
     };
+
     const onMaxRentChange = (value: number) => {
+        setLocalRentRange((prev) => [prev[0], value]);
         setFilters((prev) => ({
             ...prev,
             maxRent: value,
@@ -37,12 +50,13 @@ export const RentSlider = () => {
                     Rent Range
                 </label>
                 <DualSlider
-                    value={[minRent ?? 0, maxRent ?? 4000]}
+                    value={localRentRange}
                     minStepsBetweenThumbs={1}
                     max={4000}
                     min={0}
                     step={5}
-                    onValueChange={onMinMaxRentChange}
+                    onValueChange={handleRentChange}
+                    onValueCommit={onMinMaxRentChange}
                     className={cn("w-full")}
                 />
                 <div className="flex gap-2 flex-wrap">
@@ -52,8 +66,14 @@ export const RentSlider = () => {
                             className="h-8"
                             type="number"
                             placeholder="price"
-                            value={minRent ?? 0}
+                            value={localRentRange[0]}
                             onChange={(e) =>
+                                setLocalRentRange((prev) => [
+                                    Number(e.target.value),
+                                    prev[1],
+                                ])
+                            }
+                            onBlur={(e) =>
                                 onMinRentChange(Number(e.target.value))
                             }
                         />
@@ -62,8 +82,14 @@ export const RentSlider = () => {
                             className="h-8"
                             type="number"
                             placeholder="price"
-                            value={maxRent ?? 4000}
+                            value={localRentRange[1]}
                             onChange={(e) =>
+                                setLocalRentRange((prev) => [
+                                    prev[0],
+                                    Number(e.target.value),
+                                ])
+                            }
+                            onBlur={(e) =>
                                 onMaxRentChange(Number(e.target.value))
                             }
                         />

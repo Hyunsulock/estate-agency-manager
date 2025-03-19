@@ -21,18 +21,29 @@ export class HousePropertiesController {
     @Query('tradeType') tradeType?: string,
     @Query('status') status?: string,
     @Query('apartmentId') apartmentId?: number,
-    @Query('minDeposit') minDeposit?: string,
-    @Query('maxDeposit') maxDeposit?: string,
-    @Query('minRent') minRent?: string,
-    @Query('maxRent') maxRent?: string,
-    @Query('minSize') minSize?: string,
-    @Query('maxSize') maxSize?: string,
-    @Query('buildingNumber') buildingNumber?: string,
-    @Query('unitNumber') unitNumber?: string,
+    @Query('minDeposit') minDeposit?: number,
+    @Query('maxDeposit') maxDeposit?: number,
+    @Query('minRent') minRent?: number,
+    @Query('maxRent') maxRent?: number,
+    @Query('minSize') minSize?: number,
+    @Query('maxSize') maxSize?: number,
+    @Query('offerCount') offerCount?: number,
+    @Query('buildingNumber') buildingNumber?: number,
+    @Query('unitNumber') unitNumber?: number,
   ) {
     console.log(status)
     console.log(apartmentId)
-    return this.housePropertiesService.findByQuery(userId, agencyId, tradeType, status, apartmentId)
+    console.log(tradeType)
+    console.log('minDeposit', minDeposit)
+    console.log('maxDeposit', maxDeposit)
+    console.log('minRent', minRent)
+    console.log('maxRent', maxRent)
+    console.log('minSize', minSize )
+    console.log('maxSize',maxSize)
+    console.log('offerCount', offerCount)
+    console.log('buildingNumber',buildingNumber)
+    console.log('unitNumber',unitNumber)
+    return this.housePropertiesService.findByQuery(userId, agencyId, tradeType, status, apartmentId, minDeposit, maxDeposit, minRent, maxRent, minSize, maxSize, offerCount, buildingNumber, unitNumber)
   }
 
   @Get()
