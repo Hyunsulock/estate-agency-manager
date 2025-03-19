@@ -94,12 +94,12 @@ export class HousePropertiesService {
     );
   }
 
-  async findByQuery(userId: number, agencyId: number, tradeType: string, status: string) {
-    console.log(userId, agencyId, )
+  async findByQuery(userId: number, agencyId: number, tradeType: string, status: string, apartmentId: number) {
+    console.log(userId, agencyId,)
     let query = this.housePropertyRepository.createQueryBuilder('houseProperty')
       .leftJoin('houseProperty.agency', 'agency')
       .where('agency.id = :agencyId', { agencyId })
-      .leftJoin("houseProperty.apartment", "apartment") 
+      .leftJoin("houseProperty.apartment", "apartment")
       .leftJoin('houseProperty.offers', 'offer')
       .select([
         'houseProperty.id AS id',
@@ -141,6 +141,9 @@ export class HousePropertiesService {
     }
     if (status) {
       query = query.andWhere('houseProperty.status = :status', { status })
+    }
+    if (apartmentId) {
+      query = query.andWhere('apartment.id = :apartmentId', { apartmentId })
     }
 
     let [data, count] = await query.getManyAndCount();

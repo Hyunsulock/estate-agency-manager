@@ -20,6 +20,7 @@ export class HousePropertiesController {
     @AgencyId() agencyId: number,
     @Query('tradeType') tradeType?: string,
     @Query('status') status?: string,
+    @Query('apartmentId') apartmentId?: number,
     @Query('minDeposit') minDeposit?: string,
     @Query('maxDeposit') maxDeposit?: string,
     @Query('minRent') minRent?: string,
@@ -30,7 +31,8 @@ export class HousePropertiesController {
     @Query('unitNumber') unitNumber?: string,
   ) {
     console.log(status)
-    return this.housePropertiesService.findByQuery(userId, agencyId, tradeType, status)
+    console.log(apartmentId)
+    return this.housePropertiesService.findByQuery(userId, agencyId, tradeType, status, apartmentId)
   }
 
   @Get()

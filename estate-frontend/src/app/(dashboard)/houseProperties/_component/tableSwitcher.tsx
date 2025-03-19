@@ -14,23 +14,31 @@ import { HousePropertyStatus, tradeTypes } from "@/components/table/types";
 import { DataFilters } from "./dataFilters";
 import { jeonseColumns } from "@/components/table/jeonseColumns";
 import { rentColumns } from "@/components/table/rentColumns";
+import { DualSlider } from "@/components/ui/dualSlider";
+import { cn } from "@/lib/utils";
 interface UseGetHousePropertiesProps {
     status?: HousePropertyStatus | null;
     tradeType?: tradeTypes | null;
 }
 export const TableSwitcher = () => {
-    const [{ status, tradeType }, setFilters] = useHousePropertyFilters();
+    const [
+        { status, tradeType, apartmentId, minDeposit, maxDeposit },
+        setFilters,
+    ] = useHousePropertyFilters();
     // const [filters, setFilters] = useState<UseGetHousePropertiesProps>({
     //     status: null ,
     //     tradeType: null,
     // });
     const { data: houseProperties, isLoading: isLoadingHouseProperty } =
         // useGetHouseProperties({...filters});
-        useGetHouseProperties({ status, tradeType });
+        useGetHouseProperties({
+            status,
+            tradeType,
+            apartmentId,
+            // minDeposit,
+            // maxDeposit,
+        });
 
-    const [view, setView] = useQueryState("table", {
-        defaultValue: "table",
-    });
 
     const onTradeTypeChange = (value: string) => {
         setFilters((prev) => ({
@@ -80,6 +88,7 @@ export const TableSwitcher = () => {
                 </div>
                 {/* <DataFilters filters={filters} setFilters={setFilters}/> */}
                 <DataFilters />
+
                 {isLoadingHouseProperty ? (
                     <div className="w-full border rounded-lg h-[200px] flex flex-col items-center justify-center">
                         <Loader className="size-5 animate-spin text-muted-foreground" />
