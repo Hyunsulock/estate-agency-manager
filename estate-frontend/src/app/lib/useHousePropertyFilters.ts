@@ -1,0 +1,10 @@
+import { HousePropertyStatus, tradeTypes } from "@/components/table/types"
+import { parseAsString, parseAsStringEnum, useQueryStates } from "nuqs"
+
+export const useHousePropertyFilters = () => {
+    return useQueryStates({
+        tradeType: parseAsStringEnum(Object.values(tradeTypes)).withDefault(tradeTypes.SALE),
+        status: parseAsStringEnum(Object.values(HousePropertyStatus)),
+        apartmentId : parseAsString
+    }, { shallow: false })
+}
