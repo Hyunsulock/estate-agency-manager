@@ -2,8 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { HouseProperty } from "./types";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, MoreVertical } from "lucide-react";
 import { Button } from "../ui/button";
+import { TableActions } from "./tableActions";
 
 function headerFc(column: any, name: string) {
     return (
@@ -53,5 +54,22 @@ export const columns: ColumnDef<HouseProperty>[] = [
     {
         accessorKey: "offercount",
         header: ({ column }) => headerFc(column, "Offers"),
+    },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const id = row.original.id;
+            return (
+                <TableActions id={id}>
+                    <Button
+                        variant="ghost"
+                        className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+                        size="icon"
+                    >
+                        <MoreVertical className="size-4" />
+                    </Button>
+                </TableActions>
+            );
+        },
     },
 ];

@@ -13,8 +13,9 @@ export class CreateHousePropertyDto {
     @IsString()
     floor: string;
 
+    @IsOptional()
     @IsNumber()
-    unitNumber: number;
+    unitNumber?: number;
 
     @IsNumber()
     apartmentId: number

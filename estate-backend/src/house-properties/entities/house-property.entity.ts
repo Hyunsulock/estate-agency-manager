@@ -25,8 +25,8 @@ export class HouseProperty {
     @Column()
     floor: string;
 
-    @Column()
-    unitNumber: number;
+    @Column({ nullable: true })
+    unitNumber?: number;
 
     @ManyToOne(() => Apartment, apartment => apartment.houseProperties)
     @JoinColumn({ name: 'apartment_id' })
@@ -44,15 +44,15 @@ export class HouseProperty {
     status: string;
 
     @OneToMany(
-        ()=> HousePropertyUserSaved,
-        (housePropertyUserSaved)=> housePropertyUserSaved.houseProperty
+        () => HousePropertyUserSaved,
+        (housePropertyUserSaved) => housePropertyUserSaved.houseProperty
     )
     savedUsers: HousePropertyUserSaved[]
 
-    @OneToOne(()=> Deal, {nullable: true})
+    @OneToOne(() => Deal, { nullable: true })
     deal: Deal;
 
-    @ManyToOne(() => Customer, customer => customer.houseProperties, {nullable: true})
+    @ManyToOne(() => Customer, customer => customer.houseProperties, { nullable: true })
     @JoinColumn({ name: 'customer_id' })
     owner?: Customer;
 

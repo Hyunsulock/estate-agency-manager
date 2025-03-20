@@ -62,59 +62,6 @@ export const DataFilters = () => {
         }));
     };
 
-    // const onMinMaxDepositChange = (values: number[]) => {
-    //     setFilters((prev) => ({
-    //         ...prev,
-    //         minDeposit: values[0],
-    //         maxDeposit: values[1],
-    //     }));
-    // };
-
-    // const [localDepositRange, setLocalDepositRange] = useState<
-    //     [number, number]
-    // >([minDeposit ?? 0, maxDeposit ?? 500000]);
-
-    // const handleDepositChange = (newValues: any) => {
-    //     setLocalDepositRange(newValues);
-    // };
-
-    // const onMinDepositChange = (value: number) => {
-    //     setLocalDepositRange((prev) => [value, prev[1]]);
-    //     setFilters((prev) => ({
-    //         ...prev,
-    //         minDeposit: value,
-    //     }));
-    // };
-
-    // const onMaxDepositChange = (value: number) => {
-    //     setLocalDepositRange((prev) => [prev[0], value]);
-    //     setFilters((prev) => ({
-    //         ...prev,
-    //         maxDeposit: value,
-    //     }));
-    // };
-
-    // const onMinMaxSizeChange = (values: number[]) => {
-    //     setFilters((prev) => ({
-    //         ...prev,
-    //         minSize: values[0],
-    //         maxSize: values[1],
-    //     }));
-    // };
-
-    // const onMinSizeChange = (value: number) => {
-    //     setFilters((prev) => ({
-    //         ...prev,
-    //         minSize: value,
-    //     }));
-    // };
-
-    // const onMaxSizeChange = (value: number) => {
-    //     setFilters((prev) => ({
-    //         ...prev,
-    //         maxSize: value,
-    //     }));
-    // };
 
     const [buildingNumberInput, setBuildingNumberInput] = useState(
         buildingNumber ?? ""

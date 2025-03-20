@@ -11,6 +11,8 @@ import { Agency } from 'src/agencies/entities/agency.entity';
 import { HousePropertyUserSaved } from './entities/house-property-user-saved.entity';
 import { Customer } from 'src/customers/entities/customer.entity';
 import { UpdatesGateway } from 'src/updates/updates.gateway';
+import { Offer } from 'src/offers/entities/offer.entity';
+import { CreateHousePropertyWithOfferDto } from './dto/create-house-with-offer.dto';
 
 @Injectable()
 export class HousePropertiesService {
@@ -19,6 +21,8 @@ export class HousePropertiesService {
     private readonly customerRepository: Repository<Customer>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Offer)
+    private readonly offerRepository: Repository<Offer>,
     @InjectRepository(HousePropertyUserSaved)
     private readonly housePropertyUserSavedRepository: Repository<HousePropertyUserSaved>,
     @InjectRepository(Agency)
@@ -87,6 +91,117 @@ export class HousePropertiesService {
 
     return createdHouseProperty
   }
+
+  async createWithOffer(createHousePropertyWithOfferDto: CreateHousePropertyWithOfferDto, AgencyId: number) {
+    const { houseProperty, offer } = createHousePropertyWithOfferDto;
+    return await this.housePropertyRepository.manager.transaction(async (manager) => {
+      // Create HouseProperty
+      const apartment = await manager.findOne(Apartment, { where: { id: houseProperty.apartmentId } });
+      if (!apartment) throw new NotFoundException('apartment with no matching id');
+
+      const agencyCreater = await manager.findOne(Agency, { where: { id: AgencyId } });
+      if (!agencyCreater) throw new NotFoundException('agencyCreater with no matching id');
+
+      const agency = await manager.findOne(Agency, { where: { id: offer.agencyId } });
+      if (!agency) throw new NotFoundException('agency with no matching id');
+
+      const { apartmentId, ownerId, ...housePropertyData } = houseProperty;
+
+
+      const housePropertyEntity = manager.create(HouseProperty, {
+        ...housePropertyData,
+        apartment,
+        agency: agencyCreater,
+      });
+
+      if (houseProperty.ownerId) {
+        const owner = await manager.findOne(Customer, { where: { id: houseProperty.ownerId } });
+        if (!owner) throw new NotFoundException('owner with no matching id');
+        housePropertyEntity.owner = owner;
+      }
+
+      const savedHouseProperty = await manager.save(housePropertyEntity);
+
+      // Create Offer related to that HouseProperty
+
+      const { agencyId, ...offerData } = offer;
+
+
+      const offerEntity = manager.create(Offer, {
+        ...offerData,
+        houseProperty: savedHouseProperty,
+        agency: agency
+      });
+      const savedOffer = await manager.save(offerEntity);
+
+      // Send socket update
+      if (savedHouseProperty.agency?.id) {
+        this.updatesGateway.sendDataUpdate(
+          savedHouseProperty.agency.id,
+          'houseProperty',
+          { entity: 'houseProperty', data: savedHouseProperty, type: 'create' }
+        );
+      }
+
+      return { houseProperty: savedHouseProperty, offer: savedOffer };
+    });
+  }
+
+  //   const { apartmentId, ownerId, ...restData } = createHousePropertyDto;
+
+  //   const housePropertyCreateParams: Partial<HouseProperty> = { ...restData };
+
+
+  //   const apartment = await this.apartmentRepository.findOne({
+  //     where: {
+  //       id: apartmentId,
+  //     },
+  //   });
+
+  //   if (!apartment) {
+  //     throw new NotFoundException('apartment with no matching id');
+  //   }
+
+  //   housePropertyCreateParams.apartment = apartment
+
+  //   if (ownerId) {
+  //     const owner = await this.customerRepository.findOne({
+  //       where: {
+  //         id: ownerId,
+  //       },
+  //     });
+
+  //     if (!owner) {
+  //       throw new NotFoundException('owner with no matching id');
+  //     }
+
+  //     housePropertyCreateParams.owner = owner
+  //   }
+
+
+
+  //   const agency = await this.agencyRepository.findOne({
+  //     where: {
+  //       id: AgencyId,
+  //     },
+  //   });
+
+  //   housePropertyCreateParams.agency = agency
+
+
+
+  //   const createdHouseProperty = await this.housePropertyRepository.save(housePropertyCreateParams);
+
+  //   if (createdHouseProperty?.agency?.id) {
+  //     this.updatesGateway.sendDataUpdate(
+  //       createdHouseProperty.agency.id,
+  //       'houseProperty',
+  //       { entity: 'houseProperty', data: createdHouseProperty, type: "create" },
+  //     );
+  //   }
+
+  //   return createdHouseProperty
+  // }
 
   findAll() {
     return this.housePropertyRepository.find(
@@ -217,7 +332,7 @@ export class HousePropertiesService {
 
 
 
-    
+
     // if (tradeType) {
     //   query = query.andWhere('offer.tradeType = :tradeType', { tradeType });
     //   if (tradeType === 'jeonse') {

@@ -8,6 +8,7 @@ import {
 import { AppSidebar } from "../components/app-sidebar";
 import { cookies } from "next/headers";
 import { SiteHeader } from "../components/site-header";
+import { CreateHousePropertyModal } from "@/components/modal/createHousePropertyModal";
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -38,6 +39,7 @@ const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
         <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
             <SidebarInset>
+                <CreateHousePropertyModal/>
                 <SiteHeader />
                 <div className="flex w-full h-full">
                     <div className="w-full">

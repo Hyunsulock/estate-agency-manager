@@ -1,3 +1,4 @@
+"use client";
 import {
     Sidebar,
     SidebarContent,
@@ -13,11 +14,13 @@ import {
 
 import {
     ArrowUpCircleIcon,
+    BookUser,
     Building2,
     Calendar,
     FileClock,
     Home,
     Inbox,
+    Network,
     PlusCircleIcon,
     ScrollText,
     Search,
@@ -25,6 +28,7 @@ import {
     UsersIcon,
 } from "lucide-react";
 import { NavUser } from "./navUser";
+import { useCreateHousePropertyModal } from "@/hooks/useCreateHousePropertyModal";
 
 // Menu items.
 const items = [
@@ -49,6 +53,16 @@ const items = [
         icon: FileClock,
     },
     {
+        title: "Customers",
+        url: "customers",
+        icon: BookUser,
+    },
+    {
+        title: "Agencies",
+        url: "/agencies",
+        icon: Network,
+    },
+    {
         title: "Members",
         url: "membors",
         icon: UsersIcon,
@@ -61,6 +75,7 @@ const items = [
 ];
 
 export function AppSidebar() {
+    const { open } = useCreateHousePropertyModal();
     return (
         <Sidebar collapsible="offcanvas" variant="inset">
             <SidebarHeader>
@@ -88,6 +103,7 @@ export function AppSidebar() {
                             <SidebarMenuItem className="flex items-center gap-2">
                                 <SidebarMenuButton
                                     tooltip="Quick Create"
+                                    onClick={open}
                                     className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
                                 >
                                     <PlusCircleIcon />

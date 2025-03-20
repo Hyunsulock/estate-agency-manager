@@ -9,7 +9,7 @@ export class CreateOfferDto {
     @IsNumber()
     agencyId: number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
     housePropertyId: number;
 

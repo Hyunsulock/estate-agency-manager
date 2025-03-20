@@ -4,6 +4,7 @@ import { CreateHousePropertyDto } from './dto/create-house-property.dto';
 import { UpdateHousePropertyDto } from './dto/update-house-property.dto';
 import { UserId } from 'src/users/decorator/user-id.decorator';
 import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
+import { CreateHousePropertyWithOfferDto } from './dto/create-house-with-offer.dto';
 
 @Controller('house-properties')
 export class HousePropertiesController {
@@ -11,7 +12,14 @@ export class HousePropertiesController {
 
   @Post()
   create(@Body() createHousePropertyDto: CreateHousePropertyDto, @AgencyId() agencyId: number) {
+    console.log('create called')
     return this.housePropertiesService.create(createHousePropertyDto, agencyId);
+  }
+
+  @Post("create-with-offer")
+  createWithOffer(@Body() createHousePropertyWithOfferDto: CreateHousePropertyWithOfferDto, @AgencyId() agencyId: number) {
+    console.log('createOffer called')
+    return this.housePropertiesService.createWithOffer(createHousePropertyWithOfferDto, agencyId);
   }
 
   @Get('search')
@@ -38,11 +46,11 @@ export class HousePropertiesController {
     console.log('maxDeposit', maxDeposit)
     console.log('minRent', minRent)
     console.log('maxRent', maxRent)
-    console.log('minSize', minSize )
-    console.log('maxSize',maxSize)
+    console.log('minSize', minSize)
+    console.log('maxSize', maxSize)
     console.log('offerCount', offerCount)
-    console.log('buildingNumber',buildingNumber)
-    console.log('unitNumber',unitNumber)
+    console.log('buildingNumber', buildingNumber)
+    console.log('unitNumber', unitNumber)
     return this.housePropertiesService.findByQuery(userId, agencyId, tradeType, status, apartmentId, minDeposit, maxDeposit, minRent, maxRent, minSize, maxSize, offerCount, buildingNumber, unitNumber)
   }
 

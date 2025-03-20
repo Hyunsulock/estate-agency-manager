@@ -16,6 +16,7 @@ import { jeonseColumns } from "@/components/table/jeonseColumns";
 import { rentColumns } from "@/components/table/rentColumns";
 import { DualSlider } from "@/components/ui/dualSlider";
 import { cn } from "@/lib/utils";
+import { useCreateHousePropertyModal } from "@/hooks/useCreateHousePropertyModal";
 interface UseGetHousePropertiesProps {
     status?: HousePropertyStatus | null;
     tradeType?: tradeTypes | null;
@@ -38,10 +39,9 @@ export const TableSwitcher = () => {
         },
         setFilters,
     ] = useHousePropertyFilters();
-    // const [filters, setFilters] = useState<UseGetHousePropertiesProps>({
-    //     status: null ,
-    //     tradeType: null,
-    // });
+
+    const { open } = useCreateHousePropertyModal();
+
     const { data: houseProperties, isLoading: isLoadingHouseProperty } =
         // useGetHouseProperties({...filters});
         useGetHouseProperties({
@@ -58,7 +58,6 @@ export const TableSwitcher = () => {
             unitNumber,
             buildingNumber,
         });
-
 
     const onTradeTypeChange = (value: string) => {
         setFilters((prev) => ({
@@ -101,9 +100,24 @@ export const TableSwitcher = () => {
                             Rent
                         </TabsTrigger>
                     </TabsList>
-                    <Button size="sm" className="w-full lg:w-auto">
+                    {/* <Button
+                        size="sm"
+                        onClick={open}
+                        className="w-full lg:w-auto"
+                    >
                         <PlusIcon className="size-4 mr-2" />
                         New
+                    </Button> */}
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={open}
+                        className="w-full lg:w-auto"
+                    >
+                        <PlusIcon className="size-4 mr-1 text-muted-foreground" />
+                        <span className="text-muted-foreground">
+                            Add Property
+                        </span>
                     </Button>
                 </div>
                 {/* <DataFilters filters={filters} setFilters={setFilters}/> */}
