@@ -3,13 +3,13 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "./components/Providers";
 import { Toaster } from "@/components/ui/sonner";
-import { Inter } from "next/font/google";
+//import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { QueryProvider } from "@/components/query-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+//const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={cn(inter.className, "antialiased min-h-screen")}>
+            <body className={cn("antialiased min-h-screen")}>
                 <Providers>
                     <QueryProvider>
                         <NuqsAdapter>

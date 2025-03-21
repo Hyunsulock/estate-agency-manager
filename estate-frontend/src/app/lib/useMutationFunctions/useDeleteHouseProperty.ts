@@ -3,34 +3,34 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Backend_URL } from "../Constants";
 import getAccessSession from "../getAccessToken";
 
-export const useCreateHousePropertyWithOffer = () => {
+export const useDeleteHouseProperty = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation({
-        mutationFn: async ({ form }: any) => {
+        mutationFn: async ({ id }: any) => {
+            console.log('id is coming: ', id)
             const session = await getAccessSession();
-            const response = await fetch(Backend_URL + "/house-properties/create-with-offer", {
-                method: "POST",
+            const response = await fetch(Backend_URL + `/house-properties/${id}`, {
+                method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${session}`,
                 },
-                body: JSON.stringify(form),
 
             })
             if (!response.ok) {
-                throw new Error('Failed to create house property');
+                throw new Error('Failed to delete house property');
             }
 
             return await response.json();
         },
         async onSuccess(data, variables, context) {
-            toast.success('House property created')
-            const newPost = await data
+            toast.success('House property deleted')
+            const newPost = data
             console.log(newPost)
             queryClient.invalidateQueries({ queryKey: ['houseProperty'] })
         },
         onError: () => {
-            toast.error('Failed to create property')
+            toast.error('Failed to delete property')
         }
     });
 

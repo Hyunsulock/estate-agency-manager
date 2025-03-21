@@ -15,7 +15,9 @@ export class Offer {
     @ManyToOne(() => Agency, agency => agency.offers)
     agency: Agency;
 
-    @ManyToOne(() => HouseProperty, houseProperty => houseProperty.offers)
+    @ManyToOne(() => HouseProperty, houseProperty => houseProperty.offers, {
+        onDelete: 'CASCADE'
+    })
     houseProperty: HouseProperty;
 
     @Column('text')
