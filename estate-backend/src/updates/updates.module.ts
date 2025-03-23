@@ -4,13 +4,14 @@ import { UpdatesGateway } from './updates.gateway';
 import { AuthModule } from 'src/auth/auth.module';
 import { User } from 'src/users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Agency } from 'src/agencies/entities/agency.entity';
 
 @Module({
   imports: [
     AuthModule,
     TypeOrmModule.forFeature(
       [
-        User
+        User, Agency
       ]
     ),
   ],

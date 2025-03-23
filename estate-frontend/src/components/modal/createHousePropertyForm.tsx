@@ -101,6 +101,26 @@ export const CreateHousePropertyForm = ({
 
     const form = useForm<z.infer<typeof createHousePropertyWithOfferSchema>>({
         resolver: zodResolver(createHousePropertyWithOfferSchema),
+        defaultValues: {
+            houseProperty: {
+                apartmentId: undefined,
+                buildingNumber: undefined,
+                floor: undefined,
+                room: undefined,
+                size: undefined,
+                unitNumber: undefined,
+            },
+            offer: {
+                tradeType: undefined,
+                salePrice: undefined,
+                rentDeposit: undefined,
+                rentPrice: undefined,
+                jeonseDeposit: undefined,
+                status: undefined,
+                keyFeatures: undefined,
+                agencyId: undefined,
+            },
+        },
     });
 
     const onSubmit = (

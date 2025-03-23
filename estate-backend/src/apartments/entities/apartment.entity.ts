@@ -12,6 +12,15 @@ export class Apartment extends BaseTable {
     @Column()
     name: string;
 
+    @Column({ nullable: true })
+    address?: string;
+
+    @Column({ nullable: true })
+    bulidingYear?: string;
+
+    @Column({ nullable: true })
+    parking?: string;
+
     @ManyToOne(() => Agency, agency => agency.apartments, { nullable: true })
     @JoinColumn()
     agency?: Agency;

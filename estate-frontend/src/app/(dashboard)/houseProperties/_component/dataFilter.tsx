@@ -121,10 +121,10 @@ export const DataFilters = () => {
                         <SelectItem value={HousePropertyStatus.TODO}>
                             Todo
                         </SelectItem>
-                        <SelectItem value={HousePropertyStatus.FIND_OWNER}>
+                        <SelectItem value={HousePropertyStatus.OWNER}>
                             Found Owner
                         </SelectItem>
-                        <SelectItem value={HousePropertyStatus.FIND_BUYER}>
+                        <SelectItem value={HousePropertyStatus.BUYER}>
                             Found Buyer
                         </SelectItem>
                         <SelectItem value={HousePropertyStatus.MATCHING}>

@@ -41,22 +41,6 @@ export const TableActions = ({ id, children }: TableActionProps) => {
                 <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-32">
                     <DropdownMenuItem
-                        onClick={() => {}}
-                        disabled={false}
-                        className="p-[9px] flex items-center"
-                    >
-                        <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
-                        Details
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onClick={() => {}}
-                        disabled={false}
-                        className="p-[9px] flex items-center"
-                    >
-                        <PencilIcon className="size-4 mr-2 stroke-2" />
-                        Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
                         onClick={onDelete}
                         disabled={isPending}
                         className="text-amber-700 foucs:text-amber-700 p-[9px] flex items-center"

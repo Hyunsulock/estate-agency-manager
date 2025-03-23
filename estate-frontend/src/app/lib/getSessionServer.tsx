@@ -2,7 +2,8 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default async function getAccessSession() {
+export default async function getSessionServer() {
     const session = await getServerSession(authOptions);
-    return session?.accessToken;
+    console.log("seesion called");
+    return session;
 }

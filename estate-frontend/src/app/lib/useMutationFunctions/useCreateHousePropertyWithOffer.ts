@@ -25,9 +25,7 @@ export const useCreateHousePropertyWithOffer = () => {
         },
         async onSuccess(data, variables, context) {
             toast.success('House property created')
-            const newPost = await data
-            console.log(newPost)
-            queryClient.invalidateQueries({ queryKey: ['houseProperty'] })
+            //queryClient.invalidateQueries({ queryKey: ['houseProperty'] })
         },
         onError: () => {
             toast.error('Failed to create property')

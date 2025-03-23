@@ -17,9 +17,9 @@ export class HousePropertiesController {
   }
 
   @Post("create-with-offer")
-  createWithOffer(@Body() createHousePropertyWithOfferDto: CreateHousePropertyWithOfferDto, @AgencyId() agencyId: number) {
+  createWithOffer(@Body() createHousePropertyWithOfferDto: CreateHousePropertyWithOfferDto, @AgencyId() agencyId: number, @UserId() userId: number,) {
     console.log('createOffer called')
-    return this.housePropertiesService.createWithOffer(createHousePropertyWithOfferDto, agencyId);
+    return this.housePropertiesService.createWithOffer(createHousePropertyWithOfferDto, agencyId, userId);
   }
 
   @Get('search')
@@ -60,19 +60,19 @@ export class HousePropertiesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.housePropertiesService.findOne(+id);
+  findOne(@Param('id') id: string, @AgencyId() agencyId: number) {
+    return this.housePropertiesService.findOne(+id, agencyId);
   }
 
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHousePropertyDto: UpdateHousePropertyDto) {
-    return this.housePropertiesService.update(+id, updateHousePropertyDto);
+  update(@Param('id') id: string, @Body() updateHousePropertyDto: UpdateHousePropertyDto, @UserId() userId: number,) {
+    return this.housePropertiesService.update(+id, updateHousePropertyDto, userId);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.housePropertiesService.remove(+id);
+  remove(@Param('id') id: string, @UserId() userId: number) {
+    return this.housePropertiesService.remove(+id, userId );
   }
 
   @Post(':id/save')

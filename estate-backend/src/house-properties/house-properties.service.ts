@@ -1,4 +1,4 @@
-import { AgencyId } from './../agencies/decorator/agency-id.decorator';
+
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateHousePropertyDto } from './dto/create-house-property.dto';
 import { UpdateHousePropertyDto } from './dto/update-house-property.dto';
@@ -92,7 +92,7 @@ export class HousePropertiesService {
     return createdHouseProperty
   }
 
-  async createWithOffer(createHousePropertyWithOfferDto: CreateHousePropertyWithOfferDto, AgencyId: number) {
+  async createWithOffer(createHousePropertyWithOfferDto: CreateHousePropertyWithOfferDto, AgencyId: number, userId: number) {
     const { houseProperty, offer } = createHousePropertyWithOfferDto;
     return await this.housePropertyRepository.manager.transaction(async (manager) => {
       // Create HouseProperty
@@ -139,7 +139,7 @@ export class HousePropertiesService {
         this.updatesGateway.sendDataUpdate(
           savedHouseProperty.agency.id,
           'houseProperty',
-          { entity: 'houseProperty', data: savedHouseProperty, type: 'create' }
+          { entity: 'houseProperty', data: savedHouseProperty, type: 'create', updatedBy: userId }
         );
       }
 
@@ -225,7 +225,6 @@ export class HousePropertiesService {
         'houseProperty.floor AS floor',
         'houseProperty.unitNumber AS unitNumber',
 
-        // ✅ Add Apartment fields
         "apartment.id AS apartmentId",
         "apartment.name AS apartmentName",
         // Trade Type (to identify Jeonse, Rent, or Sale)
@@ -248,9 +247,8 @@ export class HousePropertiesService {
         'MIN(CASE WHEN offer.tradeType = \'sale\' THEN offer.salePrice ELSE NULL END) AS minSalePrice',
         'MAX(CASE WHEN offer.tradeType = \'sale\' THEN offer.salePrice ELSE NULL END) AS maxSalePrice',
       ])
-      .groupBy('houseProperty.id, offer.tradeType, apartment.id'); // ✅ Group by tradeType
+      .groupBy('houseProperty.id, offer.tradeType, apartment.id');
 
-    // Apply filters dynamically
 
     if (tradeType) {
       query.andWhere("offer.tradeType = :tradeType", { tradeType });
@@ -331,70 +329,6 @@ export class HousePropertiesService {
     }
 
 
-
-
-    // if (tradeType) {
-    //   query = query.andWhere('offer.tradeType = :tradeType', { tradeType });
-    //   if (tradeType === 'jeonse') {
-    //     if (minDeposit) {
-    //       query = query.andWhere('offer.jeonseDeposit >= :minDeposit', { minDeposit });
-    //     }
-    //     if (maxDeposit) {
-    //       query = query.andWhere('offer.jeonseDeposit <= :maxDeposit', { maxDeposit });
-    //     }
-    //   }
-
-    //   if (tradeType === 'rent') {
-    //     if (minDeposit) {
-    //       query = query.andWhere('offer.rentDeposit >= :minDeposit', { minDeposit });
-    //     }
-    //     if (maxDeposit) {
-    //       query = query.andWhere('offer.rentDeposit <= :maxDeposit', { maxDeposit });
-    //     }
-    //     if (minRent) {
-    //       query = query.andWhere('offer.rentPrice >= :minRent', { minRent });
-    //     }
-    //     if (maxRent) {
-    //       query = query.andWhere('offer.rentPrice <= :maxRent', { maxRent });
-    //     }
-    //   }
-
-    //   if (tradeType === 'sale') {
-    //     if (minDeposit) {
-    //       query = query.andWhere('offer.salePrice >= :minDeposit', { minDeposit });
-    //     }
-    //     if (maxDeposit) {
-    //       query = query.andWhere('offer.salePrice <= :maxDeposit', { maxDeposit });
-    //     }
-    //   }
-    // }
-    // if (status) {
-    //   query = query.andWhere('houseProperty.status = :status', { status })
-    // }
-    // if (apartmentId) {
-    //   query = query.andWhere('apartment.id = :apartmentId', { apartmentId })
-    // }
-
-    // if (minSize) {
-    //   query = query.andWhere('houseProperty.size >= :minSize', { minSize });
-    // }
-
-    // if (maxSize) {
-    //   query = query.andWhere('houseProperty.size <= :maxSize', { maxSize });
-    // }
-
-    // if (offerCount) {
-    //   query = query.having('COUNT(offer.id) >= :offerCount', { offerCount });
-    // }
-
-    // if (buildingNumber) {
-    //   query = query.andWhere('houseProperty.buildingNumber = :buildingNumber', { buildingNumber });
-    // }
-
-    // if (unitNumber) {
-    //   query = query.andWhere('houseProperty.unitNumber = :unitNumber', { unitNumber });
-    // }
-
     let [data, count] = await query.getManyAndCount();
 
     data = await query.getRawMany()
@@ -421,11 +355,22 @@ export class HousePropertiesService {
 
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, AgencyId: number) {
+    const agency = await this.agencyRepository.findOne({
+      where: {
+        id: AgencyId,
+      },
+    });
+    if (!agency) {
+      throw new NotFoundException('no matching agency');
+    }
     const houseProperty = await this.housePropertyRepository.findOne({
       where: {
         id,
-      }
+        agency: {
+          id: AgencyId
+        }
+      }, relations: ['apartment']
     });
 
     if (!houseProperty) {
@@ -435,7 +380,7 @@ export class HousePropertiesService {
     return houseProperty;
   }
 
-  async update(id: number, updateHousePropertyDto: UpdateHousePropertyDto) {
+  async update(id: number, updateHousePropertyDto: UpdateHousePropertyDto, userId: number) {
     const { apartmentId, ...restData } = updateHousePropertyDto;
 
 
@@ -464,17 +409,52 @@ export class HousePropertiesService {
       { id },
       housePropertyUpdateParams,
     );
+
+    const updatedHouseProperty = await this.housePropertyRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['agency', 'apartment']
+    });
+
+    if (updatedHouseProperty?.agency?.id) {
+      this.updatesGateway.sendDataUpdate(
+        updatedHouseProperty.agency.id,
+        'houseProperty',
+        {
+          entity: 'houseProperty',
+          data: updatedHouseProperty,
+          type: 'update',
+          updatedBy: userId,
+        }
+      );
+    }
+
+    return updatedHouseProperty;
   }
 
-  async remove(id: number) {
+  async remove(id: number, userId: number) {
     const houseProperty = await this.housePropertyRepository.findOne({
       where: {
         id,
-      }
+      }, relations: ['agency', 'apartment']
     });
 
     if (!houseProperty) {
       throw new NotFoundException('no matching houseProperty');
+    }
+
+    if (houseProperty?.agency?.id) {
+      this.updatesGateway.sendDataUpdate(
+        houseProperty.agency.id,
+        'houseProperty',
+        {
+          entity: 'houseProperty',
+          data: { id: id },
+          type: 'delete',
+          updatedBy: userId,
+        }
+      );
     }
 
 

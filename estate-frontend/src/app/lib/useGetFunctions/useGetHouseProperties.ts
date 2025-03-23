@@ -21,6 +21,7 @@ export const useGetHouseProperties = ({ status, tradeType, apartmentId, minDepos
     const query = useQuery({
         queryKey: ["houseProperty", { tradeType, status, apartmentId, minDeposit, maxDeposit, minRent, maxRent, minSize, maxSize, offerCount, unitNumber, buildingNumber }],
         queryFn: getHouseProperties,
+        staleTime: 0
     });
     return query
 }

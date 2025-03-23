@@ -28,9 +28,14 @@ import {
 } from "@/components/ui/sidebar";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { useGetUser } from "../lib/useGetFunctions/useGetUser";
+import { useSocket } from "./socketProvider";
 
 export function NavUser() {
     const { data: session, status, update } = useSession();
+    const socket = useSocket();
+    const { isMobile } = useSidebar();
+    const router = useRouter();
     if (status === "loading") {
         return (
             <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
@@ -41,18 +46,19 @@ export function NavUser() {
     if (!session) {
         return null;
     }
-    const router = useRouter();
+
     const name = session?.name;
     const email = session?.email;
-    console.log(name, email, session);
-    const { isMobile } = useSidebar();
+    console.log(name, email, session?.id);
+
     const avatarFallback = name
         ? name.charAt(0).toUpperCase()
         : email?.charAt(0).toUpperCase() ?? "U";
 
     const onLogout = () => {
-        signOut({ redirect: false }).then(() => {
-            router.replace("/");
+        signOut({ redirect: true }).then(() => {
+            socket?.disconnect();
+            router.replace("/login");
         });
     };
 

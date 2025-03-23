@@ -69,6 +69,18 @@ export class OffersService {
     return offer;
   }
 
+  async findOffersByHousePropertyId(housePropertyId: number) {
+    const offers = await this.offerRepository.find({
+      where: {
+        houseProperty: { id: housePropertyId },
+      },
+      relations: ['agency', 'houseProperty'],
+    });
+
+    return offers;
+  }
+
+
   async update(id: number, updateOfferDto: UpdateOfferDto) {
     const { housePropertyId, agencyId, ...restData } = updateOfferDto;
 

@@ -17,6 +17,7 @@ import { rentColumns } from "@/components/table/rentColumns";
 import { DualSlider } from "@/components/ui/dualSlider";
 import { cn } from "@/lib/utils";
 import { useCreateHousePropertyModal } from "@/hooks/useCreateHousePropertyModal";
+import useSocket from "@/app/lib/useSocket";
 interface UseGetHousePropertiesProps {
     status?: HousePropertyStatus | null;
     tradeType?: tradeTypes | null;
@@ -41,6 +42,7 @@ export const TableSwitcher = () => {
     ] = useHousePropertyFilters();
 
     const { open } = useCreateHousePropertyModal();
+
 
     const { data: houseProperties, isLoading: isLoadingHouseProperty } =
         // useGetHouseProperties({...filters});

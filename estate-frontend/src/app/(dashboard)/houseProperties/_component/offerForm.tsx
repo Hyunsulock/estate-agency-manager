@@ -81,7 +81,6 @@ export const OfferFormSection = () => {
                                     {...field}
                                     type="number"
                                     placeholder="Enter sale price"
-                                    value={field.value ?? ""}
                                 />
                             </FormControl>
                         </FormItem>
@@ -102,7 +101,6 @@ export const OfferFormSection = () => {
                                         {...field}
                                         type="number"
                                         placeholder="Enter rent deposit"
-                                        value={field.value ?? ""}
                                     />
                                 </FormControl>
                             </FormItem>
@@ -119,7 +117,6 @@ export const OfferFormSection = () => {
                                         {...field}
                                         type="number"
                                         placeholder="Enter rent price"
-                                        value={field.value ?? ""}
                                     />
                                 </FormControl>
                             </FormItem>
@@ -140,7 +137,6 @@ export const OfferFormSection = () => {
                                     {...field}
                                     type="number"
                                     placeholder="Enter jeonse deposit"
-                                    value={field.value ?? ""}
                                 />
                             </FormControl>
                         </FormItem>
@@ -187,7 +183,6 @@ export const OfferFormSection = () => {
                                 {...field}
                                 type="text"
                                 placeholder="Enter key features or notes"
-                                value={field.value ?? ""}
                             />
                         </FormControl>
                     </FormItem>

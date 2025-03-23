@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { QueryProvider } from "@/components/query-provider";
+import { SocketProvider } from "./components/socketProvider";
 
 //const inter = Inter({ subsets: ["latin"] });
 
@@ -25,12 +26,14 @@ export default function RootLayout({
         <html lang="en">
             <body className={cn("antialiased min-h-screen")}>
                 <Providers>
-                    <QueryProvider>
-                        <NuqsAdapter>
-                            <Toaster />
-                            {children}
-                        </NuqsAdapter>
-                    </QueryProvider>
+                    <SocketProvider>
+                        <QueryProvider>
+                            <NuqsAdapter>
+                                <Toaster />
+                                {children}
+                            </NuqsAdapter>
+                        </QueryProvider>
+                    </SocketProvider>
                 </Providers>
             </body>
         </html>

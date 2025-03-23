@@ -9,6 +9,8 @@ import { AppSidebar } from "../components/app-sidebar";
 import { cookies } from "next/headers";
 import { SiteHeader } from "../components/site-header";
 import { CreateHousePropertyModal } from "@/components/modal/createHousePropertyModal";
+import useSocket from "../lib/useSocket";
+import { GlobalSocketListener } from "../components/globalSocketListener";
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -39,7 +41,8 @@ const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
         <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
             <SidebarInset>
-                <CreateHousePropertyModal/>
+                <CreateHousePropertyModal />
+                <GlobalSocketListener />
                 <SiteHeader />
                 <div className="flex w-full h-full">
                     <div className="w-full">

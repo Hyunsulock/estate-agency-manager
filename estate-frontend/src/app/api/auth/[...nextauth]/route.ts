@@ -105,11 +105,14 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
         async session({ session, token }) {
-            session.id = token.id;
-            session.name = token.name;
-            session.email = token.email;
-            session.accessToken = token.accessToken;
-            session.refreshToken = token.refreshToken// Pass JWT token to frontend
+            if (session) {
+                session.id= token.id as string;
+                session.name = token.name;
+                session.email = token.email;
+                session.accessToken = token.accessToken;
+                session.refreshToken = token.refreshToken;
+                session.tokenRenew = token.tokenRenew as number;
+            }
             return session;
         },
         async redirect({ url, baseUrl }) {

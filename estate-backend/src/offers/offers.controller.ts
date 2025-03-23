@@ -27,6 +27,11 @@ export class OffersController {
     return this.offersService.update(+id, updateOfferDto);
   }
 
+  @Get('by-property/:housePropertyId')
+  findByHousePropertyId(@Param('housePropertyId') housePropertyId: number) {
+    return this.offersService.findOffersByHousePropertyId(housePropertyId);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.offersService.remove(+id);

@@ -22,6 +22,10 @@ export class CreateHousePropertyDto {
 
     @IsOptional()
     @IsNumber()
-    ownerId? : number;
+    ownerId?: number;
+
+    @IsOptional()
+    @IsString()
+    status?: string
 
 }

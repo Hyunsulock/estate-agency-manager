@@ -1,8 +1,8 @@
 export enum HousePropertyStatus {
     ACTIVE = "active",
     TODO = "todo",
-    FIND_OWNER = "found_owner",
-    FIND_BUYER = "found_buyer",
+    OWNER = "owner",
+    BUYER = "buyer",
     MATCHING = "matching",
     DEAL = "deal",
     DONE = "done"

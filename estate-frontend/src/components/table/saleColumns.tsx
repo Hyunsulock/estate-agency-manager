@@ -1,10 +1,17 @@
 "use client";
-
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { ColumnDef } from "@tanstack/react-table";
 import { HouseProperty } from "./types";
 import { ArrowUpDown, MoreVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import { TableActions } from "./tableActions";
+import { StatusSelect } from "./statusSelect";
 
 function headerFc(column: any, name: string) {
     return (
@@ -30,6 +37,15 @@ export const columns: ColumnDef<HouseProperty>[] = [
     {
         accessorKey: "status",
         header: ({ column }) => headerFc(column, "Status"),
+        cell: ({ row }) => {
+            const currentStatus = row.original.status; // Get current status from row
+            const id = row.original.id;
+            return (
+                <>
+                    <StatusSelect id={id} currentStatus={currentStatus} />
+                </>
+            );
+        },
     },
     {
         accessorKey: "buildingnumber",
