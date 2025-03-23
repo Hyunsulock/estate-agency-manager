@@ -28,7 +28,7 @@ import {
     UsersIcon,
 } from "lucide-react";
 import { NavUser } from "./navUser";
-import { useCreateHousePropertyModal } from "@/hooks/useCreateHousePropertyModal";
+import { useCreateModal } from "@/hooks/useCreateHousePropertyModal";
 
 // Menu items.
 const items = [
@@ -75,7 +75,7 @@ const items = [
 ];
 
 export function AppSidebar() {
-    const { open } = useCreateHousePropertyModal();
+    const { open } = useCreateModal("create-house-property");
     return (
         <Sidebar collapsible="offcanvas" variant="inset">
             <SidebarHeader>

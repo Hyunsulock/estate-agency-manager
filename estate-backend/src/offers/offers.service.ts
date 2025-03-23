@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HouseProperty } from 'src/house-properties/entities/house-property.entity';
 import { Agency } from 'src/agencies/entities/agency.entity';
+import { UpdatesGateway } from 'src/updates/updates.gateway';
 
 @Injectable()
 export class OffersService {
@@ -17,9 +18,10 @@ export class OffersService {
     private readonly offerRepository: Repository<Offer>,
     @InjectRepository(HouseProperty)
     private readonly housePropertyRepository: Repository<HouseProperty>,
+    private readonly updatesGateway: UpdatesGateway,
   ) { }
 
-  async create(createOfferDto: CreateOfferDto) {
+  async create(createOfferDto: CreateOfferDto, createrAgencyId: number, userId: number) {
     const { housePropertyId, agencyId, ...restData } = createOfferDto;
 
     const houseProperty = await this.housePropertyRepository.findOne({
@@ -46,7 +48,24 @@ export class OffersService {
       houseProperty: houseProperty, agency: agency, ...restData
     }
 
-    return await this.offerRepository.save(offerCreateParams);
+    const savedOffer =  await this.offerRepository.save(offerCreateParams);
+
+    if (savedOffer) {
+      this.updatesGateway.sendDataUpdate(
+        createrAgencyId,
+        'offer',
+        {
+          entity: 'offer',
+          data: savedOffer,
+          type: 'create',
+          updatedBy: userId,
+        }
+      );
+    }
+    
+
+
+    return savedOffer;
   }
 
   findAll() {
@@ -69,9 +88,10 @@ export class OffersService {
     return offer;
   }
 
-  async findOffersByHousePropertyId(housePropertyId: number) {
+  async findOffersByHousePropertyId(housePropertyId: number, tradeType: string) {
     const offers = await this.offerRepository.find({
       where: {
+        tradeType: tradeType,
         houseProperty: { id: housePropertyId },
       },
       relations: ['agency', 'houseProperty'],
@@ -116,20 +136,38 @@ export class OffersService {
     return await this.offerRepository.findOne({ where: { id }, relations: ['houseProperty', 'agency'] });
   }
 
-  async remove(id: number) {
-    const houseProperty = await this.housePropertyRepository.findOne({
+  async remove(id: number, userId: number, agencyId: number) {
+    console.log('remove', id);
+    const offer = await this.offerRepository.findOne({
       where: {
         id,
-      }
+      },
+      relations: ['agency', 'houseProperty'],
     });
 
-    if (!houseProperty) {
+    if (!offer) {
       throw new NotFoundException('no matching houseProperty');
     }
+    console.log('removed', id);
 
 
-    await this.housePropertyRepository.delete(id);
 
-    return id;
+
+    await this.offerRepository.delete(id);
+
+    if (agencyId) {
+      this.updatesGateway.sendDataUpdate(
+        agencyId,
+        'offer',
+        {
+          entity: 'offer',
+          data: offer,
+          type: 'delete',
+          updatedBy: userId,
+        }
+      );
+    }
+
+    return offer;
   }
 }

@@ -5,9 +5,11 @@ import { Offer } from './entities/offer.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HouseProperty } from 'src/house-properties/entities/house-property.entity';
 import { Agency } from 'src/agencies/entities/agency.entity';
+import { UpdatesModule } from 'src/updates/updates.module';
 
 @Module({
-  imports:[
+  imports: [
+    UpdatesModule,
     TypeOrmModule.forFeature(
       [
         Offer,
@@ -19,4 +21,4 @@ import { Agency } from 'src/agencies/entities/agency.entity';
   controllers: [OffersController],
   providers: [OffersService],
 })
-export class OffersModule {}
+export class OffersModule { }

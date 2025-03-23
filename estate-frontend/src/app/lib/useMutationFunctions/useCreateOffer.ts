@@ -3,36 +3,32 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Backend_URL } from "../Constants";
 import getAccessSession from "../getAccessToken";
 
-export const useDeleteHouseProperty = () => {
+export const useCreateOffer = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation({
-        mutationFn: async ({ id }: any) => {
-            console.log('id is coming: ', id)
+        mutationFn: async ({ form}: any) => {
             const session = await getAccessSession();
-            const response = await fetch(Backend_URL + `/house-properties/${id}`, {
-                method: "DELETE",
+            const response = await fetch(Backend_URL + "/offers", {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${session}`,
                 },
+                body: JSON.stringify(form),
 
             })
             if (!response.ok) {
-                throw new Error(String(response.status));
+                throw new Error('Failed to create offer');
             }
 
             return await response.json();
         },
         async onSuccess(data, variables, context) {
-            toast.success('House property deleted')
-            //queryClient.invalidateQueries({ queryKey: ['houseProperty'] })
+            toast.success('Offer created')
+            queryClient.invalidateQueries({ queryKey: ['houseProperty'] })
         },
-        onError: (error: any) => {
-            if (error.message === "403") {
-                toast.error("Forbidden. Please talk to your manager.");
-            } else {
-                toast.error("Failed to delete property");
-            }
+        onError: () => {
+            toast.error('Failed to create offer')
         }
     });
 

@@ -5,6 +5,8 @@ import { UpdateHousePropertyDto } from './dto/update-house-property.dto';
 import { UserId } from 'src/users/decorator/user-id.decorator';
 import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
 import { CreateHousePropertyWithOfferDto } from './dto/create-house-with-offer.dto';
+import { RBAC } from 'src/auth/decorator/rbac.decorator';
+import { Role } from 'src/users/entities/user.entity';
 
 @Controller('house-properties')
 export class HousePropertiesController {
@@ -70,9 +72,10 @@ export class HousePropertiesController {
     return this.housePropertiesService.update(+id, updateHousePropertyDto, userId);
   }
 
+  // @RBAC(Role.manager)
   @Delete(':id')
   remove(@Param('id') id: string, @UserId() userId: number) {
-    return this.housePropertiesService.remove(+id, userId );
+    return this.housePropertiesService.remove(+id, userId);
   }
 
   @Post(':id/save')

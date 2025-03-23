@@ -2,16 +2,16 @@ import { Backend_URL } from "@/app/lib/Constants";
 import getAccessSession from "@/app/lib/getAccessToken"
 import { QueryFunction } from "@tanstack/react-query";
 
-export const getOffersByHouseProperty: QueryFunction<any, [_1: string, housePropertyid: string, tradeType: string]> = async ({ queryKey }) => {
-    const [_1, housePropertyid, tradeType] = queryKey;
+export const getSingleOffer: QueryFunction<any, [_1: string, housePropertyId: string, id: string]> = async ({ queryKey }) => {
+    const [_1, housePropertyId, id] = queryKey;
     const session = await getAccessSession();
-    const res = await fetch(Backend_URL + `/offers/by-property/${housePropertyid}/by-trade-type/${tradeType}`, {
+    const res = await fetch(Backend_URL + `/offers/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session}`,
         },
-        next: { tags: ['offer', housePropertyid] },
+        next: { tags: ['offers', housePropertyId,  id] },
         cache: "no-store",
     });
 
@@ -20,5 +20,4 @@ export const getOffersByHouseProperty: QueryFunction<any, [_1: string, houseProp
     }
     return res.json();
 }
-
 

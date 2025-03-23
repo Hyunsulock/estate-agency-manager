@@ -4,9 +4,9 @@ import { getOffersByHouseProperty } from "../queryFunctions/gettOffersByHousePro
 
 
 
-export const useGetSingleHouseProperty = (housePropertyId: string) => {
+export const useGetOffersByHouseProperty = (housePropertyId: string, tradeType: string) => {
     const query = useQuery({
-        queryKey: ["offer", housePropertyId],
+        queryKey: ["offer", housePropertyId, tradeType],
         queryFn: getOffersByHouseProperty,
     });
     return query

@@ -10,7 +10,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { HouseProperty } from "./types";
 import { ArrowUpDown, MoreVertical } from "lucide-react";
 import { Button } from "../ui/button";
-import { TableActions } from "./tableActions";
+import { TableActionsHouseProperty } from "./tableActionsHouseProperty";
 import { StatusSelect } from "./statusSelect";
 
 function headerFc(column: any, name: string) {
@@ -76,7 +76,7 @@ export const columns: ColumnDef<HouseProperty>[] = [
         cell: ({ row }) => {
             const id = row.original.id;
             return (
-                <TableActions id={id}>
+                <TableActionsHouseProperty id={id}>
                     <Button
                         variant="ghost"
                         className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
@@ -84,7 +84,7 @@ export const columns: ColumnDef<HouseProperty>[] = [
                     >
                         <MoreVertical className="size-4" />
                     </Button>
-                </TableActions>
+                </TableActionsHouseProperty>
             );
         },
     },

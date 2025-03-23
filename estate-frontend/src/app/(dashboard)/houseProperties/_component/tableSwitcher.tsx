@@ -16,7 +16,7 @@ import { jeonseColumns } from "@/components/table/jeonseColumns";
 import { rentColumns } from "@/components/table/rentColumns";
 import { DualSlider } from "@/components/ui/dualSlider";
 import { cn } from "@/lib/utils";
-import { useCreateHousePropertyModal } from "@/hooks/useCreateHousePropertyModal";
+import { useCreateModal } from "@/hooks/useCreateHousePropertyModal";
 import useSocket from "@/app/lib/useSocket";
 interface UseGetHousePropertiesProps {
     status?: HousePropertyStatus | null;
@@ -41,8 +41,7 @@ export const TableSwitcher = () => {
         setFilters,
     ] = useHousePropertyFilters();
 
-    const { open } = useCreateHousePropertyModal();
-
+    const { open } = useCreateModal("create-house-property");
 
     const { data: houseProperties, isLoading: isLoadingHouseProperty } =
         // useGetHouseProperties({...filters});
@@ -70,7 +69,7 @@ export const TableSwitcher = () => {
     const router = useRouter();
 
     const handleRowClick = (row: any) => {
-        router.push(`/houseProperties/${row.id}`);
+        router.push(`/houseProperties/${row.id}?tradeType=${row.tradetype}`);
         console.log(row.id);
     };
 

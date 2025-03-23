@@ -8,6 +8,7 @@ import { envVariableKeys } from 'src/common/const/env.const';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { Agency } from 'src/agencies/entities/agency.entity';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 
 @Injectable()
 export class UsersService {
@@ -43,12 +44,6 @@ export class UsersService {
       email,
       password: hash,
     });
-
-
-
-
-
-
   }
 
   findAll() {
@@ -131,20 +126,50 @@ export class UsersService {
     });
   }
 
-  async remove(id: number) {
-    const user = await this.userRepository.findOne({
+
+  async updateUserRole(id: number, updateUserRole: UpdateUserRoleDto, agencyId: number) {
+    const { role } = updateUserRole;
+
+    const agency = await this.agencyRepository.findOne({
       where: {
-        id,
+        id: agencyId,
       }
     });
 
-    if (!user) {
-      throw new NotFoundException('존재하지 않는 사용자입니다!');
+    if (agency) {
+      const staff = await this.userRepository.findOne({ where: { id }, relations: ['agency'] },);
+
+      if (!staff) {
+        throw new NotFoundException('no user found');
+      }
+
+      if (staff.agency.id !== agency.id) {
+        throw new BadRequestException('staff is not in the agency');
+      }
+
+      await this.userRepository.update(
+        { id },
+        { role }
+      );
+
+      return staff.id
     }
-
-
-    await this.userRepository.delete(id);
-
-    return id;
   }
-}
+
+  async remove(id: number) {
+      const user = await this.userRepository.findOne({
+        where: {
+          id,
+        }
+      });
+
+      if (!user) {
+        throw new NotFoundException('존재하지 않는 사용자입니다!');
+      }
+
+
+      await this.userRepository.delete(id);
+
+      return id;
+    }
+  }

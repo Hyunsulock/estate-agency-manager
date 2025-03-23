@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 import { RBAC } from "../decorator/rbac.decorator";
@@ -16,9 +16,18 @@ export class RBACGuard implements CanActivate {
         }
         const request = context.switchToHttp().getRequest();
         const user = request.user;
+        // if (!user) {
+        //     return false;
+        // }
+        // return user.role <= role;
+
         if (!user) {
-            return false;
+            throw new UnauthorizedException(); // Will return 401
         }
-        return user.role <= role;
+
+        if (user.role > role) {
+            throw new ForbiddenException(); // Will return 403
+        }
+        return true;
     }
 }

@@ -1,9 +1,9 @@
 import { ResponsiveModal } from "../components/responsive-modal";
 import { useQueryState, parseAsBoolean } from "nuqs";
 
-export const useCreateHousePropertyModal = () => {
+export const useCreateModal = (stateString: string) => {
     const [isOpen, setIsOpen] = useQueryState(
-        "create-house-property",
+        stateString,
         parseAsBoolean.withDefault(false).withOptions({ clearOnDefault: true })
     );
 

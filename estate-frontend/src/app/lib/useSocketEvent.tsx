@@ -23,16 +23,15 @@ import { useSocket } from "../components/socketProvider";
 export const useSocketEvent = (
     event: string,
     handler: (data: any) => void,
-    enabled = true // add this default param
 ) => {
     const socket = useSocket();
 
     useEffect(() => {
-        if (!socket || !enabled) return;
+        if (!socket) return;
 
         socket.on(event, handler);
         return () => {
             socket.off(event, handler);
         };
-    }, [socket, handler, event, enabled]);
+    }, [socket, handler, event]);
 };

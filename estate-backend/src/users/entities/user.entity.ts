@@ -10,6 +10,8 @@ export enum Role {
     admin,
     manager,
     user,
+    guest,
+    blocked,
 }
 
 @Entity()

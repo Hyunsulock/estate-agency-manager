@@ -14,13 +14,14 @@ import {
     PencilIcon,
     TrashIcon,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 interface TableActionProps {
     id: number;
     children: React.ReactNode;
 }
 
-export const TableActions = ({ id, children }: TableActionProps) => {
+export const TableActionsHouseProperty = ({ id, children }: TableActionProps) => {
     const { confirm, ConfirmDialog } = useConfirm(
         "Delete Property",
         "This action cannot be undone. This will permanently delete property information including offers related to this property"

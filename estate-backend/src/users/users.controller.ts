@@ -2,10 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from 
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
+import { UserId } from './decorator/user-id.decorator';
+import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -25,6 +28,11 @@ export class UsersController {
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
+  }
+
+  @Patch(':id/role')
+  updateRole(@Param('id', ParseIntPipe) id: number, @Body() updateUserRole: UpdateUserRoleDto, @AgencyId() agencyId: number) {
+    return this.usersService.updateUserRole(id, updateUserRole, agencyId);
   }
 
   @Delete(':id')

@@ -39,10 +39,34 @@ const offerSchema = z.object({
     tradeType: z.enum(tradeTypeOptions, {
         errorMap: () => ({ message: "Select trade type" }),
     }),
-    salePrice: z.preprocess((val) => Number(val), z.number().optional()),
-    rentDeposit: z.number().optional(),
-    rentPrice: z.number().optional(),
-    jeonseDeposit: z.number().optional(),
+    rentDeposit: z.preprocess(
+        (val) =>
+            val === "" || val === null || val === undefined
+                ? undefined
+                : Number(val),
+        z.number().optional()
+    ),
+    rentPrice: z.preprocess(
+        (val) =>
+            val === "" || val === null || val === undefined
+                ? undefined
+                : Number(val),
+        z.number().optional()
+    ),
+    jeonseDeposit: z.preprocess(
+        (val) =>
+            val === "" || val === null || val === undefined
+                ? undefined
+                : Number(val),
+        z.number().optional()
+    ),
+    salePrice: z.preprocess(
+        (val) =>
+            val === "" || val === null || val === undefined
+                ? undefined
+                : Number(val),
+        z.number().optional()
+    ),
     status: z.enum(statusOptions, {
         errorMap: () => ({ message: "Select status" }),
     }),
