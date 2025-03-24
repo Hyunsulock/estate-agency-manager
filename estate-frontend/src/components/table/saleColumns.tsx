@@ -12,6 +12,7 @@ import { ArrowUpDown, MoreVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import { TableActionsHouseProperty } from "./tableActionsHouseProperty";
 import { StatusSelect } from "./statusSelect";
+import { housePropertyFuntionButton } from "./tableFunctions/housePropertyTableFunction";
 
 function headerFc(column: any, name: string) {
     return (
@@ -71,21 +72,5 @@ export const columns: ColumnDef<HouseProperty>[] = [
         accessorKey: "offercount",
         header: ({ column }) => headerFc(column, "Offers"),
     },
-    {
-        id: "actions",
-        cell: ({ row }) => {
-            const id = row.original.id;
-            return (
-                <TableActionsHouseProperty id={id}>
-                    <Button
-                        variant="ghost"
-                        className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                        size="icon"
-                    >
-                        <MoreVertical className="size-4" />
-                    </Button>
-                </TableActionsHouseProperty>
-            );
-        },
-    },
+    housePropertyFuntionButton
 ];

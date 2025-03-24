@@ -48,7 +48,7 @@ export class OffersService {
       houseProperty: houseProperty, agency: agency, ...restData
     }
 
-    const savedOffer =  await this.offerRepository.save(offerCreateParams);
+    const savedOffer = await this.offerRepository.save(offerCreateParams);
 
     if (savedOffer) {
       this.updatesGateway.sendDataUpdate(
@@ -62,7 +62,7 @@ export class OffersService {
         }
       );
     }
-    
+
 
 
     return savedOffer;
@@ -78,7 +78,8 @@ export class OffersService {
     const offer = await this.offerRepository.findOne({
       where: {
         id,
-      }
+      },
+      relations: ['agency', 'houseProperty'],
     });
 
     if (!offer) {
@@ -101,7 +102,7 @@ export class OffersService {
   }
 
 
-  async update(id: number, updateOfferDto: UpdateOfferDto) {
+  async update(id: number, updateOfferDto: UpdateOfferDto, userId: number, AgencyId: number) {
     const { housePropertyId, agencyId, ...restData } = updateOfferDto;
 
 
@@ -133,7 +134,25 @@ export class OffersService {
       offerUpdateParams,
     );
 
-    return await this.offerRepository.findOne({ where: { id }, relations: ['houseProperty', 'agency'] });
+    const updatedOffer = await this.offerRepository.findOne({ where: { id }, relations: ['houseProperty', 'agency'] })
+
+
+    if (AgencyId) {
+      this.updatesGateway.sendDataUpdate(
+        AgencyId,
+        'offer',
+        {
+          entity: 'offer',
+          data: updatedOffer,
+          type: 'update',
+          updatedBy: userId,
+        }
+      );
+
+      
+    }
+
+    return updatedOffer
   }
 
   async remove(id: number, userId: number, agencyId: number) {

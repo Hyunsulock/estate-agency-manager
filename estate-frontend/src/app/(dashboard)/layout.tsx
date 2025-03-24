@@ -1,3 +1,4 @@
+
 import { Navbar } from "@/components/navbar";
 import { Siderbar } from "@/components/sidebar";
 import {
@@ -11,6 +12,10 @@ import { SiteHeader } from "../components/site-header";
 import { CreateHousePropertyModal } from "@/components/modal/createHousePropertyModal";
 import useSocket from "../lib/useSocket";
 import { GlobalSocketListener } from "../components/globalSocketListener";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -19,6 +24,13 @@ interface DashboardLayoutProps {
 const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
     const cookieStore = await cookies();
     const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+    const session = await getServerSession(authOptions);
+
+    if (!session?.agency) {
+        console.log(session);
+        redirect("/join-agency");
+    }
+
     console.log("reloading dashboard");
     // return (
     // <div className="min-h-screen">
@@ -37,6 +49,7 @@ const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
     //     </div>
     // </div>
     // );
+
     return (
         <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />

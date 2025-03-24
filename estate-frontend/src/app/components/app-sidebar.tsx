@@ -54,7 +54,7 @@ const items = [
     },
     {
         title: "Customers",
-        url: "customers",
+        url: "/customers",
         icon: BookUser,
     },
     {
@@ -64,7 +64,7 @@ const items = [
     },
     {
         title: "Members",
-        url: "membors",
+        url: "/members",
         icon: UsersIcon,
     },
     {

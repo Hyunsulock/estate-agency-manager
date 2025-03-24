@@ -26,6 +26,9 @@ import { HouseProperty } from './house-properties/entities/house-property.entity
 import { Customer } from './customers/entities/customer.entity';
 import { HousePropertyUserSaved } from './house-properties/entities/house-property-user-saved.entity';
 import { UpdatesModule } from './updates/updates.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { Notification } from './notifications/entities/notification.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -61,6 +64,7 @@ import { UpdatesModule } from './updates/updates.module';
           Customer,
           Comment,
           HousePropertyUserSaved,
+          Notification
         ],
         synchronize: true,
       }),
@@ -76,6 +80,7 @@ import { UpdatesModule } from './updates/updates.module';
     UserHistoriesModule,
     AuthModule,
     UpdatesModule,
+    NotificationsModule,
 
   ],
   providers: [

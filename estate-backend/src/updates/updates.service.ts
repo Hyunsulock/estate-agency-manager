@@ -79,6 +79,17 @@ export class UpdatesService {
                 agency: userData.agency,
             };
             console.log(client.data.user)
+        } else {
+            // Join personal room
+            const roomName = `user/${userData.sub}`;
+            client.join(roomName);
+
+            // Optionally store user's agency on client data for easy reference
+            client.data.user = {
+                ...userData,
+                name: user.name,
+                email: user.email,
+            }
         }
     }
 

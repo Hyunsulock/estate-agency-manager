@@ -67,6 +67,18 @@ export class UsersService {
     return user
   }
 
+  async findByAgency(agencyId: number) {
+    const users = await this.userRepository.find({
+      where: {
+        agency: {
+          id: agencyId
+        },
+      },
+      relations: ['agency']
+    });
+    return users
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
 
     const { password, name, agency } = updateUserDto;

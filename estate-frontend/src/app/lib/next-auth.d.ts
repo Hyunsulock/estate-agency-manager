@@ -5,6 +5,7 @@ declare module "next-auth" {
         id: string;
         name: string;
         email: string;
+        agency: number
         accessToken: string;
         refreshToken: string;
         tokenRenew: number;
@@ -14,6 +15,7 @@ declare module "next-auth" {
         id: string;
         name: string;
         email: string;
+        agency: number
         accessToken: string;
         refreshToken: string;
     }
@@ -29,5 +31,6 @@ declare module "next-auth/jwt" {
         accessToken: string;
         refreshToken: string;
         tokenRenew: number;
+        agency: number
     };
 }

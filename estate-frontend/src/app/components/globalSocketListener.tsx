@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId } from "react";
 import { handleHousePropertySocket } from "./handleHousePropertySocket";
 import { useGetUser } from "../lib/useGetFunctions/useGetUser";
 import { useSocket } from "./socketProvider";
+import { handleOfferSocket } from "./handleOfferSocket";
 
 export const GlobalSocketListener = () => {
     const queryClient = useQueryClient();
@@ -30,7 +31,7 @@ export const GlobalSocketListener = () => {
     const handleOffer = useCallback(
         (message: any) => {
             // console.log(userId, "userid");
-            handleHousePropertySocket(queryClient, message, userId);
+            handleOfferSocket(queryClient, message, userId);
         },
         [queryClient, userId]
     );
@@ -41,12 +42,12 @@ export const GlobalSocketListener = () => {
         if (!socket) return;
 
         socket.on("houseProperty", handleHouseProperty);
-        socket.on("offer", handleOfferChange);
+        socket.on("offer", handleOffer);
         return () => {
             socket.off("houseProperty", handleHouseProperty);
-            socket.off("offer", handleOfferChange);
+            socket.off("offer", handleOffer);
         };
-    }, [socket, handleHouseProperty, handleOfferChange]);
+    }, [socket, handleHouseProperty, handleOffer]);
 
     // useSocketEvent("houseProperty", handleSocketMessage);
 

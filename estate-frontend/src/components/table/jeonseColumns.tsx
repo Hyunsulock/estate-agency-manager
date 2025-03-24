@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { HouseProperty } from "./types";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
+import { housePropertyFuntionButton } from "./tableFunctions/housePropertyTableFunction";
+import { StatusSelect } from "./statusSelect";
 
 function headerFc(column: any, name: string) {
     return (
@@ -17,7 +19,7 @@ function headerFc(column: any, name: string) {
     );
 }
 
-export const jeonseColumns : ColumnDef<HouseProperty>[] = [
+export const jeonseColumns: ColumnDef<HouseProperty>[] = [
     {
         accessorKey: "apartmentname",
         header: ({ column }) => headerFc(column, "Apartment"),
@@ -29,6 +31,15 @@ export const jeonseColumns : ColumnDef<HouseProperty>[] = [
     {
         accessorKey: "status",
         header: ({ column }) => headerFc(column, "Status"),
+        cell: ({ row }) => {
+            const currentStatus = row.original.status; // Get current status from row
+            const id = row.original.id;
+            return (
+                <>
+                    <StatusSelect id={id} currentStatus={currentStatus} />
+                </>
+            );
+        },
     },
     {
         accessorKey: "buildingnumber",
@@ -54,4 +65,5 @@ export const jeonseColumns : ColumnDef<HouseProperty>[] = [
         accessorKey: "offercount",
         header: ({ column }) => headerFc(column, "Offers"),
     },
+    housePropertyFuntionButton,
 ];

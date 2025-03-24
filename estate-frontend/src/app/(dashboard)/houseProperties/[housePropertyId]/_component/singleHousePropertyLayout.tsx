@@ -17,7 +17,7 @@ export default function SingleHousePropertyLayout({ id }: { id: string }) {
     const [offerTradeType, setOfferTradeType] = useQueryState("tradeType", {
         defaultValue: "sale",
         shallow: false,
-        clearOnDefault: false
+        clearOnDefault: false,
     });
 
     const { data: offers, isLoading: offersLoading } =
@@ -30,12 +30,12 @@ export default function SingleHousePropertyLayout({ id }: { id: string }) {
     const { open } = useCreateModal("create-offer");
     return (
         <div>
-            <CreateOfferModal housePropertyId={Number(id)}/>
+            <CreateOfferModal housePropertyId={Number(id)} />
             <div className="flex flex-wrap justify-center gap-6 p-4">
-                <div className="w-full sm:w-auto min-w-[480px] max-w-[480px]">
+                <div className="w-full sm:w-auto min-w-[480px]">
                     <RealtimeEditForm id={id} />
                 </div>
-                <div className="w-full sm:w-auto min-w-[480px] max-w-[480px]">
+                <div className="w-full sm:w-auto lg:min-w-[600px] min-w-[480px]">
                     <OfferBarChart
                         offers={offers ?? []}
                         tradeType={offerTradeType}
@@ -46,7 +46,7 @@ export default function SingleHousePropertyLayout({ id }: { id: string }) {
             <Tabs
                 value={offerTradeType}
                 onValueChange={handleTabChange}
-                className="p-4"
+                className="p-4 mt-2"
             >
                 <div className="flex flex-col gap-y-2 lg:flex-row justify-between items-center">
                     <TabsList>
@@ -65,7 +65,6 @@ export default function SingleHousePropertyLayout({ id }: { id: string }) {
                     </Button>
                 </div>
                 <TabsContent value={offerTradeType}>
-                    <div>{offerTradeType}</div>
                     <OfferTable
                         offers={offers ?? []}
                         isLoading={offersLoading}

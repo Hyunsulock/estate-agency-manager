@@ -25,8 +25,8 @@ export class OffersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto, @UserId() userId: number) {
-    return this.offersService.update(+id, updateOfferDto);
+  update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto, @UserId() userId: number, @AgencyId() agencyId: number) {
+    return this.offersService.update(+id, updateOfferDto, userId, agencyId);
   }
 
   @Get('by-property/:housePropertyId/by-trade-type/:tradeType')

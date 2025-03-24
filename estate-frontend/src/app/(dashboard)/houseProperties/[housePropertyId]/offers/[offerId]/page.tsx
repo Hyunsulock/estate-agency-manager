@@ -3,6 +3,8 @@ import {
     HydrationBoundary,
     QueryClient,
 } from "@tanstack/react-query";
+import { RealtimeOfferEditForm } from "./_component/singleOfferEditView";
+import { getSingleOffer } from "@/app/lib/queryFunctions/getSingleOfferById";
 
 
 type Props = {
@@ -11,23 +13,12 @@ type Props = {
 
 export default async function OfferDetailPage({ params }: Props) {
     const { housePropertyId, offerId } = await params;
-    // const queryClient = new QueryClient();
-    // await queryClient.prefetchQuery({
-    //     queryKey: ["houseProperty", housePropertyId],
-    //     queryFn: getSingleHouseProperty,
-    // });
-    // const dehydratedState = dehydrate(queryClient);
+
+
     return (
-        // <main>
-        //     <HydrationBoundary state={dehydratedState}>
-        //         {/* <RealtimeEditForm id={housePropertyId} /> */}
-        //         <SingleHousePropertyLayout id={housePropertyId} />
-        //     </HydrationBoundary>
-        // </main>
-        <div>
-            <h1>Offer ID: {offerId}</h1>
-            <p>Related to house property ID: {housePropertyId}</p>
-        </div>
+        <main>
+                <RealtimeOfferEditForm offerId={offerId} housePropertyId={housePropertyId}/>
+        </main>
     );
 }
 

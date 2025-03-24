@@ -34,6 +34,7 @@ async function refreshAccessToken(token: any) {
 }
 
 
+
 export const authOptions: NextAuthOptions = {
     pages: {
         signIn: '/login',
@@ -77,7 +78,8 @@ export const authOptions: NextAuthOptions = {
                     refreshToken: data.refreshToken,
                     id: data.user.id,
                     name: data.user.name,
-                    email: data.user.email
+                    email: data.user.email,
+                    agency: data.user.agency
                 }
 
             }
@@ -97,6 +99,7 @@ export const authOptions: NextAuthOptions = {
                 token.refreshToken = user.refreshToken;
                 token.accessToken = user.accessToken; // Store JWT token
                 token.tokenRenew = Date.now() + 30000;
+                token.agency = user.agency;
             }
 
             if (Date.now() > token.tokenRenew) {
@@ -106,12 +109,13 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             if (session) {
-                session.id= token.id as string;
+                session.id = token.id as string;
                 session.name = token.name;
                 session.email = token.email;
                 session.accessToken = token.accessToken;
                 session.refreshToken = token.refreshToken;
                 session.tokenRenew = token.tokenRenew as number;
+                session.agency = token.agency;
             }
             return session;
         },

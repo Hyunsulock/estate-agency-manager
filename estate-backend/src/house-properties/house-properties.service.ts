@@ -147,61 +147,7 @@ export class HousePropertiesService {
     });
   }
 
-  //   const { apartmentId, ownerId, ...restData } = createHousePropertyDto;
 
-  //   const housePropertyCreateParams: Partial<HouseProperty> = { ...restData };
-
-
-  //   const apartment = await this.apartmentRepository.findOne({
-  //     where: {
-  //       id: apartmentId,
-  //     },
-  //   });
-
-  //   if (!apartment) {
-  //     throw new NotFoundException('apartment with no matching id');
-  //   }
-
-  //   housePropertyCreateParams.apartment = apartment
-
-  //   if (ownerId) {
-  //     const owner = await this.customerRepository.findOne({
-  //       where: {
-  //         id: ownerId,
-  //       },
-  //     });
-
-  //     if (!owner) {
-  //       throw new NotFoundException('owner with no matching id');
-  //     }
-
-  //     housePropertyCreateParams.owner = owner
-  //   }
-
-
-
-  //   const agency = await this.agencyRepository.findOne({
-  //     where: {
-  //       id: AgencyId,
-  //     },
-  //   });
-
-  //   housePropertyCreateParams.agency = agency
-
-
-
-  //   const createdHouseProperty = await this.housePropertyRepository.save(housePropertyCreateParams);
-
-  //   if (createdHouseProperty?.agency?.id) {
-  //     this.updatesGateway.sendDataUpdate(
-  //       createdHouseProperty.agency.id,
-  //       'houseProperty',
-  //       { entity: 'houseProperty', data: createdHouseProperty, type: "create" },
-  //     );
-  //   }
-
-  //   return createdHouseProperty
-  // }
 
   findAll() {
     return this.housePropertyRepository.find(

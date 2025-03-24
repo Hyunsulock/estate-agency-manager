@@ -15,6 +15,13 @@ export enum tradeTypes {
 }
 
 
+export enum offerStatus {
+
+    ACTIVE = "active",
+    ONHOLD = "onhold",
+    DONE = "done"
+}
+
 export type HouseProperty = {
     id: number;
     size: number;

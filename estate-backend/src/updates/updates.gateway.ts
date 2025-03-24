@@ -15,7 +15,7 @@ export class UpdatesGateway implements OnGatewayConnection, OnGatewayDisconnect 
   }
   handleDisconnect(client: Socket) {
     const user = client.data.user;
-    if (user) {
+    if (user.agency) {
       const clearedEditors = this.updatesService.clearEditorsByUser(user);
 
       // Emit 'done_editing' for each cleared editor only
@@ -107,6 +107,11 @@ export class UpdatesGateway implements OnGatewayConnection, OnGatewayDisconnect 
 
   sendDataUpdate(agencyId: number, event: string, data: any) {
     this.server.to(`agency/${agencyId}`).emit(event, data);
+    console.log('connett')
+  }
+
+  sendDataUpdatePerson(userId: number, event: string, data: any) {
+    this.server.to(`user/${userId}`).emit(event, data);
     console.log('connett')
   }
 

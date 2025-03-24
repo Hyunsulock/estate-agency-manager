@@ -196,7 +196,7 @@ export const OfferBarChart = ({
             : "rentPrice";
 
     return (
-        <Card className="w-full max-w-[480px] min-w-[480px]">
+        <Card className="w-full h-full shadow-lg flex flex-col max-h-[440px] mt-8">
             <CardHeader>
                 <CardTitle>Offer Chart by Agency ({tradeType})</CardTitle>
                 <CardDescription>
