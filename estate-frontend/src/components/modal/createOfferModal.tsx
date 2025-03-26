@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import { ResponsiveModal } from "../responsive-modal";
 
-import { useCreateModal } from "@/hooks/useCreateHousePropertyModal";
+import { useCreateModal } from "@/hooks/useCreateModal";
 import { CreateOfferForm } from "./createOfferForm";
 
 export const CreateOfferModal = ({

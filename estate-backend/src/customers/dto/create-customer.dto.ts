@@ -1,7 +1,7 @@
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateCustomerDto {
-
+    
     @IsString()
     name: string;
 
@@ -11,5 +11,9 @@ export class CreateCustomerDto {
     @IsOptional()
     @IsNumber()
     housePropertyId: number;
+
+    @IsOptional()
+    @IsString()
+    intro: string
 
 }

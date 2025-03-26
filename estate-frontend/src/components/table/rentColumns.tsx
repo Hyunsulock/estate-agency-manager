@@ -7,18 +7,7 @@ import { Button } from "../ui/button";
 import { housePropertyFuntionButton } from "./tableFunctions/housePropertyTableFunction";
 import { StatusSelect } from "./statusSelect";
 
-function headerFc(column: any, name: string) {
-    return (
-        <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-            {name}
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-    );
-}
-
+import { headerFc } from "./tableFunctions/headerFunction";
 export const rentColumns: ColumnDef<HouseProperty>[] = [
     {
         accessorKey: "apartmentname",

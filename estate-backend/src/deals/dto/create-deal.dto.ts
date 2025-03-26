@@ -3,7 +3,6 @@ import { Type } from "class-transformer";
 import { ArrayNotEmpty, IsArray, IsDate, IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateDealDto {
-    @IsOptional()
     @IsNumber()
     offerId: number;
 
@@ -19,16 +18,14 @@ export class CreateDealDto {
     @IsDate()
     dealDate: Date;
 
-    @ArrayNotEmpty()
-    @IsString({
-        each: true,
-    })
-    @Type(() => String)
-    dealersId: string[];
+    @IsString()
+    dealerId: string;
 
+    @IsOptional()
     @IsNumber()
     buyerId: number;
     
+    @IsOptional()
     @IsNumber()
     sellerId: number;
 

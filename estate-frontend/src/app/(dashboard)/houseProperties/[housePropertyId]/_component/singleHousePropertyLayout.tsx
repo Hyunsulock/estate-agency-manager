@@ -11,7 +11,7 @@ import { OfferTable } from "./offerTable";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { CreateOfferModal } from "@/components/modal/createOfferModal";
-import { useCreateModal } from "@/hooks/useCreateHousePropertyModal";
+import { useCreateModal } from "@/hooks/useCreateModal";
 
 export default function SingleHousePropertyLayout({ id }: { id: string }) {
     const [offerTradeType, setOfferTradeType] = useQueryState("tradeType", {

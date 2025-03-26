@@ -9,6 +9,8 @@ import { Offer } from 'src/offers/entities/offer.entity';
 import { HouseProperty } from 'src/house-properties/entities/house-property.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Customer } from 'src/customers/entities/customer.entity';
+import { SearchDealDto } from './dto/search-deal.dto';
+import { UpdatesGateway } from 'src/updates/updates.gateway';
 
 @Injectable()
 export class DealsService {
@@ -25,9 +27,10 @@ export class DealsService {
     private readonly offerRepository: Repository<Offer>,
     @InjectRepository(HouseProperty)
     private readonly housePropertyRepository: Repository<HouseProperty>,
+    private readonly updatesGateway: UpdatesGateway,
   ) { }
-  async create(createDealDto: CreateDealDto) {
-    const { buyAgencyId, sellAgencyId, dealersId, housePropertyId, offerId, buyerId, sellerId, ...restData } = createDealDto;
+  async create(createDealDto: CreateDealDto, agencyId: number) {
+    const { buyAgencyId, sellAgencyId, dealerId, housePropertyId, offerId, buyerId, sellerId, ...restData } = createDealDto;
 
     const dealCrerateParams: Partial<Deal> = { ...restData };
 
@@ -73,32 +76,14 @@ export class DealsService {
 
     dealCrerateParams.sellAgency = sellAgency;
 
-    const dealerList = []
 
-    for (const dealerId of dealersId) {
-      const dealer = await this.userRepository.findOne({ where: { id: +dealerId } });
+    const dealer = await this.userRepository.findOne({ where: { id: +dealerId } });
 
-      if (!dealer) {
-        throw new NotFoundException(`Dealer with ID ${dealerId} not found`);
-      }
-
-      dealerList.push(dealer);
+    if (!dealer) {
+      throw new NotFoundException(`Dealer with ID ${dealerId} not found`);
     }
 
-
-
-
-    if (dealerList.length !== dealersId.length) {
-
-      console.log(dealerList)
-      console.log(dealersId)
-      throw new NotFoundException(`dealer with ID not found`);
-    }
-    else {
-      dealCrerateParams.dealers = dealerList
-    }
-
-
+    dealCrerateParams.dealer = dealer
 
     if (offerId) {
       const offer = await this.offerRepository.findOne({ where: { id: offerId } });
@@ -110,15 +95,79 @@ export class DealsService {
       dealCrerateParams.offer = offer;
     }
 
-    return this.dealRepository.save(dealCrerateParams);
+    const savedDeal = await this.dealRepository.save(dealCrerateParams);
+
+    if (agencyId) {
+      this.updatesGateway.sendDataUpdate(
+        agencyId,
+        'deal',
+        {
+          entity: 'deal',
+          data: savedDeal,
+          type: 'create',
+        }
+      );
+    }
+
+    return savedDeal
   }
 
   findAll() {
     return this.dealRepository.find(
       {
-        relations: ['houseProperty', 'offer', 'buyAgency', 'sellAgency', 'dealers', 'seller', 'buyer']
+        relations: ['houseProperty', 'houseProperty.apartment', 'offer', 'buyAgency', 'sellAgency', 'dealers', 'seller', 'buyer']
       }
     );
+  }
+
+
+  async searchDeals(searchParams: SearchDealDto, agencyId: number) {
+    console.log('searchParams', searchParams)
+    const query = this.dealRepository
+      .createQueryBuilder('deal')
+      .leftJoinAndSelect('deal.houseProperty', 'houseProperty')
+      .leftJoinAndSelect('houseProperty.apartment', 'apartment')
+      .leftJoinAndSelect('houseProperty.agency', 'agency')
+      .leftJoinAndSelect('deal.buyAgency', 'buyAgency')
+      .leftJoinAndSelect('deal.sellAgency', 'sellAgency')
+      .leftJoinAndSelect('deal.seller', 'seller')
+      .leftJoinAndSelect('deal.buyer', 'buyer')
+      .leftJoinAndSelect('deal.dealer', 'dealer')
+      .leftJoinAndSelect('deal.offer', 'offer')
+
+
+    if (searchParams.tradeType) {
+      query.andWhere('offer.tradeType = :tradeType', { tradeType: searchParams.tradeType });
+    }
+
+    if (searchParams.apartmentId) {
+      query.andWhere('apartment.id = :apartmentId', { apartmentId: searchParams.apartmentId });
+    }
+    if (searchParams.buildingNumber) {
+      query.andWhere('houseProperty.buildingNumber = :buildingNumber', { buildingNumber: searchParams.buildingNumber });
+    }
+    if (searchParams.unitNumber) {
+      query.andWhere('houseProperty.unitNumber = :unitNumber', { unitNumber: searchParams.unitNumber });
+    }
+    if (searchParams.buyerName) {
+      query.andWhere('buyer.name LIKE :buyerName', { buyerName: `%${searchParams.buyerName}%` });
+    }
+    if (searchParams.sellerName) {
+      query.andWhere('seller.name LIKE :sellerName', { sellerName: `%${searchParams.sellerName}%` });
+    }
+    if (searchParams.sellerAgencyName) {
+      query.andWhere('sellAgency.name LIKE :sellerAgencyName', { sellerAgencyName: `%${searchParams.sellerAgencyName}%` });
+    }
+    if (searchParams.buyerAgencyName) {
+      query.andWhere('buyAgency.name LIKE :buyerAgencyName', { buyerAgencyName: `%${searchParams.buyerAgencyName}%` });
+    }
+    if (searchParams.dealDateStartRange && searchParams.dealDateEndRange) {
+      query.andWhere('deal.dealDate BETWEEN :start AND :end', {
+        start: searchParams.dealDateStartRange,
+        end: searchParams.dealDateEndRange,
+      });
+    }
+    return query.getMany();
   }
 
   findOne(id: number) {
@@ -126,7 +175,7 @@ export class DealsService {
   }
 
   async update(id: number, updateDealDto: UpdateDealDto) {
-    const { buyAgencyId, sellAgencyId, dealersId, sellerId, buyerId, ...restData } = updateDealDto;
+    const { buyAgencyId, sellAgencyId, dealerId, sellerId, buyerId, ...restData } = updateDealDto;
 
 
     const dealUpdateParams: Partial<Deal> = { ...restData };
@@ -174,26 +223,12 @@ export class DealsService {
 
 
 
-    if (dealersId) {
-
-      const dealerList = []
-      dealersId.forEach(async (dealerId) => {
-        const dealer = await this.userRepository.findOne({ where: { id: +dealerId } });
-
-        if (!dealer) {
-          throw new NotFoundException(`dealer with ID ${dealerId} not found`);
-        }
-
-        dealerList.push(dealer);
-      })
-
-      if (dealerList.length !== dealersId.length) {
-        throw new NotFoundException(`dealer with ID not found`);
+    if (dealerId) {
+      const dealer = await this.userRepository.findOne({ where: { id: +dealerId } });
+      if (!dealer) {
+        throw new NotFoundException(`dealer with ID ${dealerId} not found`);
       }
-      else {
-        dealUpdateParams.dealers = dealerList
-      }
-
+      dealUpdateParams.dealer = dealer
     }
 
     await this.dealRepository.update(
@@ -205,7 +240,7 @@ export class DealsService {
     return this.dealRepository.findOne({ where: { id }, relations: ['houseProperty', 'buyAgency', 'sellAgency', 'offer'] });
   }
 
-  async remove(id: number) {
+  async remove(id: number, agencyId: number) {
     const deal = await this.dealRepository.findOne({
       where: {
         id,
@@ -217,6 +252,18 @@ export class DealsService {
     }
 
     await this.dealRepository.delete(id);
+
+    if (agencyId) {
+      this.updatesGateway.sendDataUpdate(
+        agencyId,
+        'deal',
+        {
+          entity: 'deal',
+          data: deal,
+          type: 'delete',
+        }
+      );
+    }
 
     return id;
   }

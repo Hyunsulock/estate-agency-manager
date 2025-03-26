@@ -25,7 +25,7 @@ export const useCreateOffer = () => {
         },
         async onSuccess(data, variables, context) {
             toast.success('Offer created')
-            queryClient.invalidateQueries({ queryKey: ['houseProperty'] })
+            //queryClient.invalidateQueries({ queryKey: ['houseProperty'] })
         },
         onError: () => {
             toast.error('Failed to create offer')

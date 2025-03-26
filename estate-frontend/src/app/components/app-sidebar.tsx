@@ -28,7 +28,7 @@ import {
     UsersIcon,
 } from "lucide-react";
 import { NavUser } from "./navUser";
-import { useCreateModal } from "@/hooks/useCreateHousePropertyModal";
+import { useCreateModal } from "@/hooks/useCreateModal";
 
 // Menu items.
 const items = [
@@ -39,7 +39,7 @@ const items = [
     },
     {
         title: "Deals",
-        url: "/Deals",
+        url: "/deals",
         icon: ScrollText,
     },
     {

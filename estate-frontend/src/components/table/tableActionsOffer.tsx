@@ -4,13 +4,16 @@ import { useDeleteOffer } from "@/app/lib/useMutationFunctions/useDeleteOffer";
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/hooks/use-confirm";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { Pencil1Icon } from "@radix-ui/react-icons";
-import { TrashIcon } from "lucide-react";
+import { useCreateModal } from "@/hooks/useCreateModal";
+import { Pencil1Icon, Pencil2Icon } from "@radix-ui/react-icons";
+import { TrashIcon, Upload } from "lucide-react";
+import { CreateDealModal } from "../modal/createDealModal";
 
 interface TableActionProps {
     id: number;
@@ -26,24 +29,27 @@ export const TableActionsOffer = ({
     children,
 }: TableActionProps) => {
     const { confirm, ConfirmDialog } = useConfirm(
-        "Delete Property",
-        "This action cannot be undone. This will permanently delete property information including offers related to this property"
+        "Delete Offer",
+        "This action cannot be undone. This will permanently delete property information including a deal related to this offer"
     );
 
     const { mutate, isPending } = useDeleteOffer();
+
+    const { open } = useCreateModal("create-deal");
     const onDelete = async () => {
-        console.log("hello delete offer id", id);
         const ok = await confirm();
-        console.log(ok);
         if (!ok) return;
         mutate({ id, housePropertyId, tradeType });
     };
+
     return (
         <div className="flex justify-end">
             <ConfirmDialog />
+            <CreateDealModal housePropertyId={housePropertyId} offerId={id} />
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-32">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
                         onClick={onDelete}
                         disabled={isPending}
@@ -51,6 +57,14 @@ export const TableActionsOffer = ({
                     >
                         <TrashIcon className="size-4 mr-2 stroke-2" />
                         Delete
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={open}
+                        disabled={isPending}
+                        className="text-blue-800 foucs:text-blue-700 p-[9px] flex items-center"
+                    >
+                        <Upload className="size-4 mr-2 stroke-2" />
+                        Make Deal
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

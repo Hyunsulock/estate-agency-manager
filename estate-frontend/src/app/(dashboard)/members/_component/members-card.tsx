@@ -15,29 +15,46 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { useGetUser } from "@/app/lib/useGetFunctions/useGetUser";
 import { useGetUsers } from "@/app/lib/useGetFunctions/useGetUsers";
+import { useUpdateRole } from "@/app/lib/useMutationFunctions/useUpdateRole";
 
 const roleToLabel = (role: number) => {
     switch (role) {
         case 0:
-            return "Admin";
+            return "admin";
         case 1:
-            return "Manager";
+            return "manager";
         case 2:
-            return "User";
+            return "user";
         case 3:
-            return "Guest";
+            return "guest";
         case 4:
-            return "Blocked";
+            return "blocked";
         default:
-            return "Unknown";
+            return "unknown";
+    }
+};
+
+const labelToRole = (label: string) => {
+    switch (label) {
+        case "admin":
+            return 0;
+        case "manager":
+            return 1;
+        case "user":
+            return 2;
+        case "guest":
+            return 3;
+        case "blocked":
+            return 4;
+        default:
+            return 2;
     }
 };
 
 export const MembersCard = () => {
     const { data: members, isLoading } = useGetUsers();
+    const { mutate: updateRole, isPending } = useUpdateRole();
 
     if (isLoading) return null;
 
@@ -73,9 +90,13 @@ export const MembersCard = () => {
                                 </div>
                             </div>
                             <Select
-                                defaultValue={roleToLabel(
-                                    member.role
-                                ).toLowerCase()}
+                                defaultValue={roleToLabel(member.role)}
+                                onValueChange={(val) =>
+                                    updateRole({
+                                        id: member.id,
+                                        json: { role: labelToRole(val) },
+                                    })
+                                }
                             >
                                 <SelectTrigger
                                     className="ml-auto w-[110px]"
@@ -85,17 +106,15 @@ export const MembersCard = () => {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {[
-                                        "Admin",
-                                        "Manager",
-                                        "User",
-                                        "Guest",
-                                        "Blocked",
+                                        "admin",
+                                        "manager",
+                                        "user",
+                                        "guest",
+                                        "blocked",
                                     ].map((role) => (
-                                        <SelectItem
-                                            key={role}
-                                            value={role.toLowerCase()}
-                                        >
-                                            {role}
+                                        <SelectItem key={role} value={role}>
+                                            {role.charAt(0).toUpperCase() +
+                                                role.slice(1)}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>

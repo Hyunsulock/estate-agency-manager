@@ -1,3 +1,4 @@
+import { SearchCustomerDto } from './dto/search-customer.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -42,13 +43,37 @@ export class CustomersService {
     return this.customerRepository.save(customerCreateParams);
   }
 
-  findAll() {
-    return this.customerRepository.find();
-  }
+  // findAll() {
+  //   return this.customerRepository.find();
+  // }
 
   findOne(id: number) {
     return this.customerRepository.findOne({ where: { id } });
   }
+
+  // findByAgencyQuery with dynamic filtering
+  async findByAgencyQuery (agencyId: number, searchCustomerDto: SearchCustomerDto) {
+    const { name, phoneNumber, intro } = searchCustomerDto;
+    const query = this.customerRepository.createQueryBuilder('customer')
+      .where('customer.agency = :agencyId', { agencyId });
+
+    if (name) {
+      query.andWhere('customer.name LIKE :name', { name: `%${name}%` });
+    }
+
+    if (phoneNumber) {
+      query.andWhere('customer.phoneNumber LIKE :phoneNumber', { phoneNumber: `%${phoneNumber}%` });
+    }
+
+    if (intro) {
+      query.andWhere('customer.intro LIKE :intro', { intro: `%${intro}%` });
+    }
+
+    const result = await query.getMany();
+
+    return result;
+  }
+
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto) {
     const customer = await this.customerRepository.findOne({ where: { id } });

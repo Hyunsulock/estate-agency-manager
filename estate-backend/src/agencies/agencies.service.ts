@@ -4,6 +4,7 @@ import { UpdateAgencyDto } from './dto/update-agency.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Agency } from './entities/agency.entity';
 import { Repository } from 'typeorm';
+import { SearchAgencyDto } from './dto/search-agency.dto';
 
 @Injectable()
 export class AgenciesService {
@@ -12,8 +13,8 @@ export class AgenciesService {
     private readonly agencyRepository: Repository<Agency>,
   ) { }
 
-  create(createAgencyDto: CreateAgencyDto) {
-    return this.agencyRepository.save(createAgencyDto);
+  async create(createAgencyDto: CreateAgencyDto) {
+    return await this.agencyRepository.save(createAgencyDto);
   }
 
   findAll() {
@@ -33,6 +34,36 @@ export class AgenciesService {
 
     return agency;
   }
+
+  async searchAgencies(searchAgencyDto: SearchAgencyDto) {
+    const { name, phoneNumber, location } = searchAgencyDto
+
+    console.log('ssearchDto', name, phoneNumber, location)
+
+    const query = this.agencyRepository.createQueryBuilder('agency');
+
+    if (name) {
+      query.andWhere('agency.name LIKE :name', { name: `%${name}%` });
+    }
+    if (phoneNumber) {
+      query.andWhere('agency.phoneNumber LIKE :phoneNumber', { phoneNumber: `%${phoneNumber}%` });
+    }
+    if (location) {
+      query.andWhere('agency.location LIKE :location', { location: `%${location}%` });
+    }
+
+    if( name) {
+      console.log('name', name)
+    }
+
+    const data = await query.getMany();
+
+    console.log('query', data)
+
+    return data;
+
+  }
+
 
   async update(id: number, updateAgencyDto: UpdateAgencyDto) {
     const agency = await this.agencyRepository.findOne({

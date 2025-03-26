@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import { ResponsiveModal } from "../responsive-modal";
 
-import { useCreateModal } from "@/hooks/useCreateHousePropertyModal";
+import { useCreateModal } from "@/hooks/useCreateModal";
 import { CreateHousePropertyForm } from "./createHousePropertyForm";
 
 export const CreateHousePropertyModal = () => {
@@ -12,7 +12,7 @@ export const CreateHousePropertyModal = () => {
 
     return (
         <ResponsiveModal open={isOpen} onOpenChange={setIsOpen}>
-            <CreateHousePropertyForm onCancel={close}/>
+            <CreateHousePropertyForm onCancel={close} />
         </ResponsiveModal>
-    )
-}
+    );
+};

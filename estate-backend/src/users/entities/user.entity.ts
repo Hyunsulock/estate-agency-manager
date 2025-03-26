@@ -42,7 +42,9 @@ export class User extends BaseTable {
     @ManyToOne(() => Agency, agency => agency.staffs, { nullable: true })
     agency: Agency;
 
-    @ManyToMany(() => Deal, deal => deal.dealers)
+
+
+    @OneToMany(() => Deal, deal => deal.dealer, { nullable: true })
     deals: Deal[];
 
 

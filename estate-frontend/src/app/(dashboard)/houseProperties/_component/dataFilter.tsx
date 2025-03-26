@@ -20,10 +20,8 @@ import { RentSlider } from "./rentSlider";
 import { RangeSliderFilter } from "./rangeSliderFilter";
 
 export const DataFilters = () => {
-    const { data: apartments, isLoading: isLoadingApartments } =
+    const { data: apartments, isLoading } =
         useGetApartments();
-
-    const isLoading = isLoadingApartments;
 
     const apartmentOptions = apartments?.map((apartment: any) => ({
         value: apartment.id,

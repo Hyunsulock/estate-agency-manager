@@ -6,18 +6,9 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { housePropertyFuntionButton } from "./tableFunctions/housePropertyTableFunction";
 import { StatusSelect } from "./statusSelect";
+import { headerFc } from "./tableFunctions/headerFunction";
 
-function headerFc(column: any, name: string) {
-    return (
-        <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-            {name}
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-    );
-}
+
 
 export const jeonseColumns: ColumnDef<HouseProperty>[] = [
     {

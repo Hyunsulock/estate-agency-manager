@@ -3,10 +3,11 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuSeparator,
+    DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/hooks/use-confirm";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import {
     ExternalLink,
@@ -21,7 +22,10 @@ interface TableActionProps {
     children: React.ReactNode;
 }
 
-export const TableActionsHouseProperty = ({ id, children }: TableActionProps) => {
+export const TableActionsHouseProperty = ({
+    id,
+    children,
+}: TableActionProps) => {
     const { confirm, ConfirmDialog } = useConfirm(
         "Delete Property",
         "This action cannot be undone. This will permanently delete property information including offers related to this property"

@@ -16,7 +16,7 @@ import { jeonseColumns } from "@/components/table/jeonseColumns";
 import { rentColumns } from "@/components/table/rentColumns";
 import { DualSlider } from "@/components/ui/dualSlider";
 import { cn } from "@/lib/utils";
-import { useCreateModal } from "@/hooks/useCreateHousePropertyModal";
+import { useCreateModal } from "@/hooks/useCreateModal";
 import useSocket from "@/app/lib/useSocket";
 interface UseGetHousePropertiesProps {
     status?: HousePropertyStatus | null;

@@ -43,6 +43,7 @@ export const useConfirm = (title: string, message: string) => {
                         <CardTitle>{title}</CardTitle>
                         <CardDescription>{message}</CardDescription>
                     </CardHeader>
+                    <div className="flex gap-4 mt-4">
                     <Button
                         onClick={handleCancel}
                         variant="outline"
@@ -53,10 +54,11 @@ export const useConfirm = (title: string, message: string) => {
                     <Button
                         onClick={handleConfirm}
                         variant="outline"
-                        className="w-full lg:w-auto"
+                        className="w-full lg:w-auto text-amber-700"
                     >
                         Confirm
                     </Button>
+                    </div>
                 </CardContent>
             </Card>
         </ResponsiveModal>

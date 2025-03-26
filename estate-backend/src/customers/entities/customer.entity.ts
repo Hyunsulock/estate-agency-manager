@@ -1,17 +1,21 @@
 import { Agency } from "src/agencies/entities/agency.entity";
 import { Comment } from "src/comments/entities/comment.entity";
+import { BaseTable } from "src/common/entities/base-table.entity";
 import { Deal } from "src/deals/entities/deal.entity";
 import { HouseProperty } from "src/house-properties/entities/house-property.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
-export class Customer {
+export class Customer extends BaseTable {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ length: 100 })
     name: string;
+
+    @Column({ nullable: true })
+    intro: string;
 
     @Column({ nullable: true, length: 20 })
     phoneNumber: string;
@@ -33,5 +37,7 @@ export class Customer {
 
     @OneToMany(() => Comment, comment => comment.customer)
     comments: Comment[];
+
+
 
 }

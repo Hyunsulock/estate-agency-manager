@@ -8,9 +8,11 @@ import { HouseProperty } from 'src/house-properties/entities/house-property.enti
 import { Offer } from 'src/offers/entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Customer } from 'src/customers/entities/customer.entity';
+import { UpdatesModule } from 'src/updates/updates.module';
 
 @Module({
   imports:[
+    UpdatesModule,
         TypeOrmModule.forFeature([
             Deal,
             Agency,

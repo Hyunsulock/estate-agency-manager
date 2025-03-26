@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
+import { SearchCustomerDto } from './dto/search-customer.dto';
+import { SearchAgencyDto } from 'src/agencies/dto/search-agency.dto';
 
 @Controller('customers')
 export class CustomersController {
@@ -13,10 +15,11 @@ export class CustomersController {
     return this.customersService.create(createCustomerDto, agencyId);
   }
 
-  @Get()
-  findAll() {
-    return this.customersService.findAll();
+  @Get('search')
+  findAll(@Query() searchCustomerDto: SearchCustomerDto, @AgencyId() agencyId: number) {
+    return this.customersService.findByAgencyQuery(agencyId, searchCustomerDto);
   }
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {

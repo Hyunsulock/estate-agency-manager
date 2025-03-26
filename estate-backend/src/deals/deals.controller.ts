@@ -1,21 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { DealsService } from './deals.service';
 import { CreateDealDto } from './dto/create-deal.dto';
 import { UpdateDealDto } from './dto/update-deal.dto';
+import { UserId } from 'src/users/decorator/user-id.decorator';
+import { SearchDealDto } from './dto/search-deal.dto';
+import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
 
 @Controller('deals')
 export class DealsController {
   constructor(private readonly dealsService: DealsService) {}
 
   @Post()
-  create(@Body() createDealDto: CreateDealDto) {
-    return this.dealsService.create(createDealDto);
+  create(@Body() createDealDto: CreateDealDto, @AgencyId() agencyId: number) {
+    return this.dealsService.create(createDealDto, agencyId);
   }
 
   @Get()
   findAll() {
     return this.dealsService.findAll();
   }
+
+  @Get('search')
+  searchByAgency(@AgencyId() agencyId: number, @Query() searchDealDto: SearchDealDto) {
+    return this.dealsService.searchDeals(searchDealDto, agencyId);
+  }
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -28,7 +37,7 @@ export class DealsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.dealsService.remove(+id);
+  remove(@Param('id') id: string, @AgencyId() agencyId: number) {
+    return this.dealsService.remove(+id, agencyId);
   }
 }
