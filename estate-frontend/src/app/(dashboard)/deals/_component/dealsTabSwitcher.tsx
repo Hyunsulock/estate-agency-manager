@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DealDataFilters } from "./dataFilterDeals";
 import { useDealFilters } from "@/app/lib/useDealFilters";
 import { tradeTypes } from "@/components/table/types";
+import { useRouter } from "next/navigation";
 
 export default function DealsTableSwitcher() {
     const [filters, setFilters] = useDealFilters();
@@ -28,6 +29,11 @@ export default function DealsTableSwitcher() {
         }));
     };
 
+    const router = useRouter();
+    const handleRowClick = (row: any) => {
+        router.push(`/deals/${row.id}`);
+    };
+
     return (
         <div className="p-6">
             <Tabs value={filters.tradeType} onValueChange={onTradeTypeChange}>
@@ -41,7 +47,11 @@ export default function DealsTableSwitcher() {
                     {isLoading ? (
                         <div className="text-center py-8">Loading deals...</div>
                     ) : (
-                        <DataTable columns={dealsColumns} data={deals || []} />
+                        <DataTable
+                            columns={dealsColumns}
+                            data={deals || []}
+                            onRowDoubleClick={handleRowClick}
+                        />
                     )}
                 </TabsContent>
             </Tabs>

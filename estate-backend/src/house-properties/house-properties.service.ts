@@ -13,6 +13,7 @@ import { Customer } from 'src/customers/entities/customer.entity';
 import { UpdatesGateway } from 'src/updates/updates.gateway';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { CreateHousePropertyWithOfferDto } from './dto/create-house-with-offer.dto';
+import { UserHistoriesService } from 'src/user-histories/user-histories.service';
 
 @Injectable()
 export class HousePropertiesService {
@@ -32,6 +33,7 @@ export class HousePropertiesService {
     @InjectRepository(HouseProperty)
     private readonly housePropertyRepository: Repository<HouseProperty>,
     private readonly updatesGateway: UpdatesGateway,
+    private readonly userHistoriesService: UserHistoriesService,
   ) { }
   async create(createHousePropertyDto: CreateHousePropertyDto, AgencyId: number) {
 
@@ -142,6 +144,25 @@ export class HousePropertiesService {
           { entity: 'houseProperty', data: savedHouseProperty, type: 'create', updatedBy: userId }
         );
       }
+
+      const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+      const currentAgency = await this.agencyRepository.findOne({
+        where: { id: AgencyId }
+      });
+
+      if (savedHouseProperty) {
+        await this.userHistoriesService.logHistory({
+          currentUser: currentUser,
+          action: 'CREATE',
+          tableName: 'houseProperties',
+          recordId: savedHouseProperty.id,
+          oldData: null,
+          newData: savedHouseProperty,
+          currentAgency: currentAgency
+        });
+      }
+
+      
 
       return { houseProperty: savedHouseProperty, offer: savedOffer };
     });
@@ -326,7 +347,7 @@ export class HousePropertiesService {
     return houseProperty;
   }
 
-  async update(id: number, updateHousePropertyDto: UpdateHousePropertyDto, userId: number) {
+  async update(id: number, updateHousePropertyDto: UpdateHousePropertyDto, userId: number, agencyId: number) {
     const { apartmentId, ...restData } = updateHousePropertyDto;
 
 
@@ -375,11 +396,27 @@ export class HousePropertiesService {
         }
       );
     }
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
+
+    if (updatedHouseProperty) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'UPDATE',
+        tableName: 'houseProperties',
+        recordId: updatedHouseProperty.id,
+        oldData: null,
+        newData: updateHousePropertyDto,
+        currentAgency: currentAgency
+      });
+    }
 
     return updatedHouseProperty;
   }
 
-  async remove(id: number, userId: number) {
+  async remove(id: number, userId: number, agencyId: number) {
     const houseProperty = await this.housePropertyRepository.findOne({
       where: {
         id,
@@ -402,8 +439,22 @@ export class HousePropertiesService {
         }
       );
     }
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
 
-
+    if (houseProperty) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'DELETE',
+        tableName: 'houseProperties',
+        recordId: houseProperty.id,
+        oldData: houseProperty,
+        newData: null,
+        currentAgency: currentAgency
+      });
+    }
     await this.housePropertyRepository.delete(id);
 
     return id;

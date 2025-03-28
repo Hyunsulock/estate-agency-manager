@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import getUser from "../queryFunctions/getUser";
 import getSessionServer from "../getSessionServer";
+import { getUser } from "../queryFunctions/getUser";
 
 
-export const useGetUser = () => {
+export const useGetUser = (id: string) => {
     const query = useQuery({
-        queryKey: ["user"],
-        queryFn: getSessionServer,
+        queryKey: ["user", id],
+        queryFn: getUser,
     });
     return query
 }

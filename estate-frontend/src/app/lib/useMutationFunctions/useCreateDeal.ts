@@ -18,7 +18,7 @@ export const useCreateDeal = () => {
 
             })
             if (!response.ok) {
-                throw new Error('Failed to create offer');
+                throw new Error('Failed to create deal');
             }
 
             return await response.json();

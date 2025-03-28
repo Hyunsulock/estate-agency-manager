@@ -9,6 +9,8 @@ import { Offer } from 'src/offers/entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Customer } from 'src/customers/entities/customer.entity';
 import { UpdatesModule } from 'src/updates/updates.module';
+import { UserHistoriesService } from 'src/user-histories/user-histories.service';
+import { UserHistory } from 'src/user-histories/entities/user-history.entity';
 
 @Module({
   imports:[
@@ -19,10 +21,11 @@ import { UpdatesModule } from 'src/updates/updates.module';
             Offer,
             HouseProperty,
             User,
-            Customer
+            Customer,
+            UserHistory
         ])
       ],
   controllers: [DealsController],
-  providers: [DealsService],
+  providers: [DealsService, UserHistoriesService],
 })
 export class DealsModule {}

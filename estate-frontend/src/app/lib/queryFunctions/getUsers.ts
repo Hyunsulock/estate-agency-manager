@@ -12,6 +12,7 @@ export async function getUsers() {
         next: { tags: ['users'] },
         cache: "no-store",
     });
+    console.log('users called')
 
     if (!res.ok) {
         throw new Error("Failed to fetch data");

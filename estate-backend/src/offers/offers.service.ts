@@ -7,6 +7,8 @@ import { Repository } from 'typeorm';
 import { HouseProperty } from 'src/house-properties/entities/house-property.entity';
 import { Agency } from 'src/agencies/entities/agency.entity';
 import { UpdatesGateway } from 'src/updates/updates.gateway';
+import { UserHistoriesService } from 'src/user-histories/user-histories.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class OffersService {
@@ -18,7 +20,10 @@ export class OffersService {
     private readonly offerRepository: Repository<Offer>,
     @InjectRepository(HouseProperty)
     private readonly housePropertyRepository: Repository<HouseProperty>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly updatesGateway: UpdatesGateway,
+    private readonly userHistoriesService: UserHistoriesService,
   ) { }
 
   async create(createOfferDto: CreateOfferDto, createrAgencyId: number, userId: number) {
@@ -61,6 +66,23 @@ export class OffersService {
           updatedBy: userId,
         }
       );
+    }
+
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: createrAgencyId }
+    });
+
+    if (savedOffer) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'CREATE',
+        tableName: 'offers',
+        recordId: savedOffer.id,
+        oldData: null,
+        newData: savedOffer,
+        currentAgency: currentAgency
+      });
     }
 
 
@@ -149,7 +171,24 @@ export class OffersService {
         }
       );
 
-      
+
+    }
+
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
+
+    if (updatedOffer) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'UPDATE',
+        tableName: 'offers',
+        recordId: updatedOffer.id,
+        oldData: null,
+        newData: updateOfferDto,
+        currentAgency: currentAgency
+      });
     }
 
     return updatedOffer
@@ -185,6 +224,23 @@ export class OffersService {
           updatedBy: userId,
         }
       );
+    }
+
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
+
+    if (offer) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'DELETE',
+        tableName: 'offers',
+        recordId: offer.id,
+        oldData: offer,
+        newData: null,
+        currentAgency: currentAgency
+      });
     }
 
     return offer;

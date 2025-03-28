@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Query } from '@nestjs/common';
 import { ApartmentsService } from './apartments.service';
 import { CreateApartmentDto } from './dto/create-apartment.dto';
 import { UpdateApartmentDto } from './dto/update-apartment.dto';
 import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
+import { SearchApartmentDto } from './dto/search-apartment.dto';
 
 @Controller('apartments')
 export class ApartmentsController {
@@ -24,6 +25,12 @@ export class ApartmentsController {
   find(@AgencyId() agencyId: number) {
     return this.apartmentsService.find(agencyId);
   }
+
+  @Get('search')
+  search(@Query() searchDto: SearchApartmentDto, @AgencyId() agencyId: number) {
+    return this.apartmentsService.search(searchDto, agencyId);
+  }
+
 
   
 

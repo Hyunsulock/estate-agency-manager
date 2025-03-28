@@ -10,6 +10,7 @@ interface UseGetCustomersProps {
 }
 
 export const useGetCustomersQuery = ({ name, phoneNumber, intro }: UseGetCustomersProps) => {
+    console.log('yo- customer')
     const query = useQuery({
         queryKey: ["customer", { name, phoneNumber, intro }],
         queryFn: getCustomersQuery,

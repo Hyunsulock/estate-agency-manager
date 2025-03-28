@@ -11,13 +11,13 @@ import {
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useGetUser } from "@/app/lib/useGetFunctions/useGetUser";
+// import { useGetUser } from "@/app/lib/useGetFunctions/useGetUser";
 
 export const UserButton = () => {
-    //const { data: session, status, update } = useSession();
-    const { data: session, isLoading} = useGetUser();
+    const { data: session, status, update } = useSession();
+    // const { data: session, isLoading} = useGetUser();
     const router = useRouter();
-    if (isLoading) {
+    if (status === "loading") {
         return (
             <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
                 <Loader className="size-4 animate-spin text-muted-foreground" />

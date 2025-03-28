@@ -81,7 +81,7 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 
-    const { password, name, agency } = updateUserDto;
+    const { password, name, agency, email } = updateUserDto;
 
     const user = await this.userRepository.findOne({
       where: {
@@ -123,6 +123,12 @@ export class UsersService {
     if (name) {
       data = {
         ...data, name: name
+      }
+    }
+
+    if (email) {
+      data = {
+        ...data, email: email
       }
     }
 

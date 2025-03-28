@@ -10,7 +10,7 @@ interface UseGetAgenciesProps {
 
 export const useGetAgenciesQuery = ({ name, phoneNumber, location }: UseGetAgenciesProps) => {
     const query = useQuery({
-        queryKey: ["agencies", { name, phoneNumber, location }],
+        queryKey: ["agency", { name, phoneNumber, location }],
         queryFn: getAgenciesQuery,
     });
     return query

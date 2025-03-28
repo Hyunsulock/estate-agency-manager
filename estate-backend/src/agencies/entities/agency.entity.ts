@@ -4,6 +4,7 @@ import { BaseTable } from "src/common/entities/base-table.entity";
 import { Customer } from "src/customers/entities/customer.entity";
 import { HouseProperty } from "src/house-properties/entities/house-property.entity";
 import { Offer } from "src/offers/entities/offer.entity";
+import { UserHistory } from "src/user-histories/entities/user-history.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -38,6 +39,9 @@ export class Agency extends BaseTable {
 
     @OneToMany(() => Comment, comment => comment.agency)
     comments: Comment[];
+
+    @OneToMany(() => UserHistory, userHistory => userHistory.agency)
+    history: UserHistory[];
 
 
 }

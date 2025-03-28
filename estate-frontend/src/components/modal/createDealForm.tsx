@@ -33,6 +33,7 @@ import { useCreateDeal } from "@/app/lib/useMutationFunctions/useCreateDeal";
 import { useGetUsers } from "@/app/lib/useGetFunctions/useGetUsers";
 import { useGetAgencies } from "@/app/lib/useGetFunctions/useGetAgencies";
 import { useGetCustomersQuery } from "@/app/lib/useGetFunctions/useGetCustomersQuery";
+import { useEffect } from "react";
 
 const createDealSchema = z.object({
     housePropertyId: z.number(),
@@ -49,13 +50,19 @@ interface CreateDealFormProps {
     onCancel: () => void;
     housePropertyId: number;
     offerId?: number;
+    agencies: any;
+    customers: any;
 }
 
 export const CreateDealForm = ({
     onCancel,
     housePropertyId,
     offerId,
+    agencies,
+    customers
 }: CreateDealFormProps) => {
+    const { data: users, isLoading: userLoading } = useGetUsers();
+
     const { mutate, isPending } = useCreateDeal();
     const form = useForm<z.infer<typeof createDealSchema>>({
         resolver: zodResolver(createDealSchema),
@@ -64,15 +71,6 @@ export const CreateDealForm = ({
             offerId: offerId ?? undefined,
         },
     });
-
-    const { data: users =[], isLoading: userLoading } = useGetUsers();
-    const { data: agencies = [], isLoading: agencyLoading } = useGetAgencies();
-    const { data: customers = [], isLoading: customerLoading } =
-        useGetCustomersQuery({
-            name: null,
-            phoneNumber: null,
-            intro: null,
-        });
 
     const onSubmit = (values: z.infer<typeof createDealSchema>) => {
         mutate(
@@ -85,10 +83,6 @@ export const CreateDealForm = ({
             }
         );
     };
-
-    if (userLoading || agencyLoading || customerLoading) {
-        return null;
-    }
 
     return (
         <Card className="w-full border-none shadow-none">
@@ -173,16 +167,18 @@ export const CreateDealForm = ({
                                                 />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {agencies.map((agency: any) => (
-                                                    <SelectItem
-                                                        key={agency.id}
-                                                        value={String(
-                                                            agency.id
-                                                        )}
-                                                    >
-                                                        {agency.name}
-                                                    </SelectItem>
-                                                ))}
+                                                {(agencies ?? []).map(
+                                                    (agency: any) => (
+                                                        <SelectItem
+                                                            key={agency.id}
+                                                            value={String(
+                                                                agency.id
+                                                            )}
+                                                        >
+                                                            {agency.name}
+                                                        </SelectItem>
+                                                    )
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </FormItem>
@@ -217,7 +213,7 @@ export const CreateDealForm = ({
                                                 />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {customers.map(
+                                                {(customers ?? []).map(
                                                     (customer: any) => (
                                                         <SelectItem
                                                             key={customer.id}
@@ -251,7 +247,7 @@ export const CreateDealForm = ({
                                             <SelectValue placeholder="Select dealer" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {users.map((user: any) => (
+                                            {(users ?? []).map((user: any) => (
                                                 <SelectItem
                                                     key={user.id}
                                                     value={String(user.id)}

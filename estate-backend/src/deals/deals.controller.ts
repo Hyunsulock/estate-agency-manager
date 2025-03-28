@@ -11,8 +11,8 @@ export class DealsController {
   constructor(private readonly dealsService: DealsService) {}
 
   @Post()
-  create(@Body() createDealDto: CreateDealDto, @AgencyId() agencyId: number) {
-    return this.dealsService.create(createDealDto, agencyId);
+  create(@Body() createDealDto: CreateDealDto, @UserId() userId : number, @AgencyId() agencyId: number) {
+    return this.dealsService.create(createDealDto, userId, agencyId);
   }
 
   @Get()
@@ -21,7 +21,7 @@ export class DealsController {
   }
 
   @Get('search')
-  searchByAgency(@AgencyId() agencyId: number, @Query() searchDealDto: SearchDealDto) {
+  searchByAgency(@AgencyId() agencyId: number,  @Query() searchDealDto: SearchDealDto) {
     return this.dealsService.searchDeals(searchDealDto, agencyId);
   }
 
@@ -32,12 +32,12 @@ export class DealsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDealDto: UpdateDealDto) {
-    return this.dealsService.update(+id, updateDealDto);
+  update(@Param('id') id: string, @Body() updateDealDto: UpdateDealDto, @UserId() userId: number,  @AgencyId() agencyId: number) {
+    return this.dealsService.update(+id, updateDealDto, userId, agencyId);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @AgencyId() agencyId: number) {
-    return this.dealsService.remove(+id, agencyId);
+  remove(@Param('id') id: string, @UserId() userId: number, @AgencyId() agencyId: number) {
+    return this.dealsService.remove(+id, userId, agencyId);
   }
 }

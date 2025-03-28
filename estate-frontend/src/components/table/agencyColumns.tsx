@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { headerFc } from "./tableFunctions/headerFunction";
+import { agencyFuntionButton } from "./tableFunctions/agencyTableFuncton";
 
 export type Agency = {
     id: number;
@@ -33,4 +34,5 @@ export const agencyColumns: ColumnDef<Agency>[] = [
                 ? format(new Date(row.original.createdAt), "yyyy-MM-dd")
                 : "-",
     },
+    agencyFuntionButton,
 ];

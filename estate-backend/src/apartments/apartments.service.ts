@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Apartment } from './entities/apartment.entity';
 import { Repository } from 'typeorm';
 import { Agency } from 'src/agencies/entities/agency.entity';
+import { SearchApartmentDto } from './dto/search-apartment.dto';
 
 @Injectable()
 export class ApartmentsService {
@@ -32,6 +33,27 @@ export class ApartmentsService {
         agency: { id: agencyId },
       },
     });
+  }
+
+  async search(searchDto: SearchApartmentDto, agencyId: number) {
+    const { name, address } = searchDto;
+    const query = this.apartmentRepository.createQueryBuilder('apartment');
+
+    if (agencyId) {
+      query.where('apartment.agencyId = :agencyId', { agencyId });
+    }
+
+    if (name) {
+      query.andWhere('apartment.name ILIKE :name', { name: `%${name}%` });
+    }
+
+    if (address) {
+      query.andWhere('apartment.address ILIKE :address', { address: `%${address}%` });
+    }
+
+    query.orderBy('apartment.createdAt', 'DESC');
+
+    return query.getMany();
   }
 
   findAll() {

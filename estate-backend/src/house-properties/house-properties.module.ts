@@ -10,6 +10,8 @@ import { HousePropertyUserSaved } from './entities/house-property-user-saved.ent
 import { Customer } from 'src/customers/entities/customer.entity';
 import { UpdatesModule } from 'src/updates/updates.module';
 import { Offer } from 'src/offers/entities/offer.entity';
+import { UserHistoriesService } from 'src/user-histories/user-histories.service';
+import { UserHistory } from 'src/user-histories/entities/user-history.entity';
 
 @Module({
     imports:[
@@ -21,10 +23,11 @@ import { Offer } from 'src/offers/entities/offer.entity';
           User,
           HousePropertyUserSaved,
           Customer,
-          Offer
+          Offer,
+          UserHistory
       ])
     ],
   controllers: [HousePropertiesController],
-  providers: [HousePropertiesService],
+  providers: [HousePropertiesService, UserHistoriesService],
 })
 export class HousePropertiesModule {}

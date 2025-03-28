@@ -28,6 +28,7 @@ import { HousePropertyUserSaved } from './house-properties/entities/house-proper
 import { UpdatesModule } from './updates/updates.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { Notification } from './notifications/entities/notification.entity';
+import { UserHistory } from './user-histories/entities/user-history.entity';
 
 @Module({
   imports: [
@@ -64,7 +65,8 @@ import { Notification } from './notifications/entities/notification.entity';
           Customer,
           Comment,
           HousePropertyUserSaved,
-          Notification
+          Notification,
+          UserHistory,
         ],
         synchronize: true,
       }),

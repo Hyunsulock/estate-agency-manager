@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useGetAgencies } from "@/app/lib/useGetFunctions/useGetAgencies";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { agencyColumns } from "@/components/table/agencyColumns";
@@ -9,12 +8,14 @@ import { DataTable } from "@/components/table/dataTable";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useGetAgenciesQuery } from "@/app/lib/useGetFunctions/useGetAgenciesQuery";
-import { CreateAgencyForm } from "@/components/modal/createAgencyForm";
 import { CreateAgencyModal } from "@/components/modal/createAgencyModal";
 import { useCreateModal } from "@/hooks/useCreateModal";
 
+
 export default function AgenciesPage() {
     const router = useRouter();
+
+
 
     const [localFilters, setLocalFilters] = useState({
         name: "",
@@ -49,8 +50,9 @@ export default function AgenciesPage() {
         }));
     };
 
-    const handleCreateClick = () => {
-        router.push("/agencies/create");
+    const handleRowClick = (row: any) => {
+        console.log("row", row);
+        router.push(`/agencies/${row.id}`);
     };
 
     const { open } = useCreateModal("create-agency");

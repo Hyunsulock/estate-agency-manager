@@ -4,6 +4,7 @@ import { Comment } from "src/comments/entities/comment.entity";
 import { BaseTable } from "src/common/entities/base-table.entity";
 import { Deal } from "src/deals/entities/deal.entity";
 import { HousePropertyUserSaved } from "src/house-properties/entities/house-property-user-saved.entity";
+import { UserHistory } from "src/user-histories/entities/user-history.entity";
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum Role {
@@ -42,7 +43,8 @@ export class User extends BaseTable {
     @ManyToOne(() => Agency, agency => agency.staffs, { nullable: true })
     agency: Agency;
 
-
+    @ManyToOne(() => UserHistory, userHistory => userHistory.user, { nullable: true })
+    userHistory: UserHistory;
 
     @OneToMany(() => Deal, deal => deal.dealer, { nullable: true })
     deals: Deal[];

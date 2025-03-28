@@ -41,18 +41,6 @@ export class HousePropertiesController {
     @Query('buildingNumber') buildingNumber?: number,
     @Query('unitNumber') unitNumber?: number,
   ) {
-    console.log(status)
-    console.log(apartmentId)
-    console.log(tradeType)
-    console.log('minDeposit', minDeposit)
-    console.log('maxDeposit', maxDeposit)
-    console.log('minRent', minRent)
-    console.log('maxRent', maxRent)
-    console.log('minSize', minSize)
-    console.log('maxSize', maxSize)
-    console.log('offerCount', offerCount)
-    console.log('buildingNumber', buildingNumber)
-    console.log('unitNumber', unitNumber)
     return this.housePropertiesService.findByQuery(userId, agencyId, tradeType, status, apartmentId, minDeposit, maxDeposit, minRent, maxRent, minSize, maxSize, offerCount, buildingNumber, unitNumber)
   }
 
@@ -68,14 +56,14 @@ export class HousePropertiesController {
 
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHousePropertyDto: UpdateHousePropertyDto, @UserId() userId: number,) {
-    return this.housePropertiesService.update(+id, updateHousePropertyDto, userId);
+  update(@Param('id') id: string, @Body() updateHousePropertyDto: UpdateHousePropertyDto, @UserId() userId: number, @AgencyId() agencyId: number,) {
+    return this.housePropertiesService.update(+id, updateHousePropertyDto, userId, agencyId);
   }
 
   // @RBAC(Role.manager)
   @Delete(':id')
-  remove(@Param('id') id: string, @UserId() userId: number) {
-    return this.housePropertiesService.remove(+id, userId);
+  remove(@Param('id') id: string, @UserId() userId: number, @AgencyId() agencyId: number,) {
+    return this.housePropertiesService.remove(+id, userId, agencyId);
   }
 
   @Post(':id/save')

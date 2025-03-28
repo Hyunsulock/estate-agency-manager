@@ -11,6 +11,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Customer } from 'src/customers/entities/customer.entity';
 import { SearchDealDto } from './dto/search-deal.dto';
 import { UpdatesGateway } from 'src/updates/updates.gateway';
+import { UserHistoriesService } from 'src/user-histories/user-histories.service';
 
 @Injectable()
 export class DealsService {
@@ -28,8 +29,9 @@ export class DealsService {
     @InjectRepository(HouseProperty)
     private readonly housePropertyRepository: Repository<HouseProperty>,
     private readonly updatesGateway: UpdatesGateway,
+    private readonly userHistoriesService: UserHistoriesService,
   ) { }
-  async create(createDealDto: CreateDealDto, agencyId: number) {
+  async create(createDealDto: CreateDealDto, agencyId: number, userId: number) {
     const { buyAgencyId, sellAgencyId, dealerId, housePropertyId, offerId, buyerId, sellerId, ...restData } = createDealDto;
 
     const dealCrerateParams: Partial<Deal> = { ...restData };
@@ -109,6 +111,23 @@ export class DealsService {
       );
     }
 
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
+
+    if (savedDeal) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'CREATE',
+        tableName: 'deals',
+        recordId: savedDeal.id,
+        oldData: null,
+        newData: savedDeal,
+        currentAgency: currentAgency
+      });
+    }
+
     return savedDeal
   }
 
@@ -171,10 +190,10 @@ export class DealsService {
   }
 
   findOne(id: number) {
-    return this.dealRepository.findOne({ where: { id }, relations: ['houseProperty', 'agency', 'offer', 'buyAgency', 'sellAgency', 'dealers'] });
+    return this.dealRepository.findOne({ where: { id }, relations: ['houseProperty', 'houseProperty.apartment', 'offer', 'offer.agency', 'buyAgency', 'sellAgency', 'dealer', 'buyer', 'seller'] });
   }
 
-  async update(id: number, updateDealDto: UpdateDealDto) {
+  async update(id: number, updateDealDto: UpdateDealDto,userId: number, agencyId: number) {
     const { buyAgencyId, sellAgencyId, dealerId, sellerId, buyerId, ...restData } = updateDealDto;
 
 
@@ -236,11 +255,42 @@ export class DealsService {
       dealUpdateParams,
     );
 
+    const updatedDeal = await this.dealRepository.findOne({ where: { id }, relations: ['houseProperty', 'buyAgency', 'sellAgency', 'offer'] });
 
-    return this.dealRepository.findOne({ where: { id }, relations: ['houseProperty', 'buyAgency', 'sellAgency', 'offer'] });
+    if (agencyId) {
+      this.updatesGateway.sendDataUpdate(
+        agencyId,
+        'deal',
+        {
+          entity: 'deal',
+          data: updatedDeal,
+          type: 'update',
+        }
+      );
+    }
+
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
+
+    if (updatedDeal) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'UPDATE',
+        tableName: 'deals',
+        recordId: updatedDeal.id,
+        oldData: null,
+        newData: updateDealDto,
+        currentAgency: currentAgency
+      });
+    }
+
+
+    return updatedDeal
   }
 
-  async remove(id: number, agencyId: number) {
+  async remove(id: number,userId: number, agencyId: number) {
     const deal = await this.dealRepository.findOne({
       where: {
         id,
@@ -263,6 +313,23 @@ export class DealsService {
           type: 'delete',
         }
       );
+    }
+
+    const currentUser = await this.userRepository.findOne({ where: { id: userId } });
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
+
+    if (deal) {
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'DELETE',
+        tableName: 'deals',
+        recordId: deal.id,
+        oldData: deal,
+        newData: null,
+        currentAgency: currentAgency
+      });
     }
 
     return id;

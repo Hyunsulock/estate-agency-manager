@@ -5,20 +5,49 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Agency } from './entities/agency.entity';
 import { Repository } from 'typeorm';
 import { SearchAgencyDto } from './dto/search-agency.dto';
+import { UserHistoriesService } from 'src/user-histories/user-histories.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AgenciesService {
   constructor(
     @InjectRepository(Agency)
     private readonly agencyRepository: Repository<Agency>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly userHistoriesService: UserHistoriesService,
   ) { }
 
-  async create(createAgencyDto: CreateAgencyDto) {
-    return await this.agencyRepository.save(createAgencyDto);
+  async create(createAgencyDto: CreateAgencyDto, userId: number, agencyId: number) {
+
+    const currentUser = await this.userRepository.findOne({
+      where: { id: userId }
+    });
+
+    const currentAgency = await this.agencyRepository.findOne({
+      where: { id: agencyId }
+    });
+
+    const savedAgency = await this.agencyRepository.save(createAgencyDto);
+
+    if (savedAgency) {
+      console.log('savedAgency', savedAgency)
+      await this.userHistoriesService.logHistory({
+        currentUser: currentUser,
+        action: 'CREATE',
+        tableName: 'agencies',
+        recordId: savedAgency.id,
+        oldData: null,
+        newData: savedAgency,
+        currentAgency: currentAgency
+      });
+    }
+    return savedAgency;
+
   }
 
-  findAll() {
-    return this.agencyRepository.find();
+  async findAll() {
+    return await this.agencyRepository.find();
   }
 
   async findOne(id: number) {
@@ -52,7 +81,7 @@ export class AgenciesService {
       query.andWhere('agency.location LIKE :location', { location: `%${location}%` });
     }
 
-    if( name) {
+    if (name) {
       console.log('name', name)
     }
 

@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/navbar";
 import { Siderbar } from "@/components/sidebar";
 import {
@@ -32,7 +31,6 @@ const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
     }
 
     console.log("reloading dashboard");
-
 
     return (
         <SidebarProvider defaultOpen={defaultOpen}>

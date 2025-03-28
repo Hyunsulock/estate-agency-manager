@@ -28,7 +28,10 @@ export class HouseProperty {
     @Column({ nullable: true })
     unitNumber?: number;
 
-    @ManyToOne(() => Apartment, apartment => apartment.houseProperties)
+    @ManyToOne(() => Apartment, apartment => apartment.houseProperties, {
+        cascade: true,
+        onDelete: "CASCADE",
+    })
     @JoinColumn({ name: 'apartment_id' })
     apartment: Apartment;
 

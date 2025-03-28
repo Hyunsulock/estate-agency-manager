@@ -49,7 +49,7 @@ const items = [
     },
     {
         title: "History",
-        url: "/history",
+        url: "/user-history",
         icon: FileClock,
     },
     {
@@ -63,13 +63,18 @@ const items = [
         icon: Network,
     },
     {
+        title: "Apartments",
+        url: "/apartments",
+        icon: Settings,
+    },
+    {
         title: "Members",
         url: "/members",
         icon: UsersIcon,
     },
     {
-        title: "Settings",
-        url: "/settings",
+        title: "Account",
+        url: "/account",
         icon: Settings,
     },
 ];
