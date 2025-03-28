@@ -9,7 +9,6 @@ import { AppSidebar } from "../components/app-sidebar";
 import { cookies } from "next/headers";
 import { SiteHeader } from "../components/site-header";
 import { CreateHousePropertyModal } from "@/components/modal/createHousePropertyModal";
-import useSocket from "../lib/useSocket";
 import { GlobalSocketListener } from "../components/globalSocketListener";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";

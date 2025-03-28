@@ -8,8 +8,9 @@ import DealRecentSwitcher from "../_component/dealRecentSwitcher";
 
 export default function HomePage() {
     const { data, isLoading } = useUserActivitySummary();
+    const { data: session, status } = useSession();
 
-    if (isLoading || !data) {
+    if (isLoading || !data || status === "loading") {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                 {Array.from({ length: 3 }).map((_, i) => (
@@ -34,6 +35,14 @@ export default function HomePage() {
 
     return (
         <div>
+            <h1 className="text-2xl font-bold mb-4">
+                Welcome back to{" "}
+                <span className="text-primary">
+                    {(session?.agency as unknown as { name: string })?.name ??
+                        ""}
+                </span>{" "}
+                👋
+            </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                 <UpdateDeleteRadialCard
                     title="Offers"

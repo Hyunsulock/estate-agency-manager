@@ -46,6 +46,24 @@ export class AgenciesService {
 
   }
 
+  async createAgencyAdmin(createAgencyDto: CreateAgencyDto, userId: number,) {
+    const currentUser = await this.userRepository.findOne({
+      where: { id: userId }
+    });
+
+    const savedAgency = await this.agencyRepository.save(createAgencyDto);
+
+    if (currentUser) {
+      await this.userRepository.update(
+        { id: userId },
+        { role: 0,  agency: savedAgency } // 0 = agency admin
+      );
+    }
+
+    return savedAgency;
+
+  }
+
   async findAll() {
     return await this.agencyRepository.find();
   }

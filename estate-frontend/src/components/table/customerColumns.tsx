@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { customerFuntionButton } from "./tableFunctions/customerTableFunction";
 
 export type Customer = {
     id: number;
@@ -27,4 +28,5 @@ export const customerColumns: ColumnDef<Customer>[] = [
         cell: ({ row }) =>
             new Date(row.original.createdAt).toLocaleDateString(),
     },
+    customerFuntionButton,
 ];

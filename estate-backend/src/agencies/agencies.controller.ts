@@ -16,6 +16,12 @@ export class AgenciesController {
     return this.agenciesService.create(createAgencyDto, userId, agencyId);
   }
 
+  @Post('admin')
+  createAgencyAdim(@Body() createAgencyDto: CreateAgencyDto, @UserId() userId: number) {
+    console.log('createAgencyDto', createAgencyDto)
+    return this.agenciesService.createAgencyAdmin(createAgencyDto, userId);
+  }
+
   @Get()
   findAll() {
     return this.agenciesService.findAll();
