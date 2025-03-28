@@ -19,8 +19,20 @@ import { toast } from "sonner";
 const createApartmentSchema = z.object({
     name: z.string().min(1, "Apartment name is required"),
     address: z.string().min(1, "Address is required"),
-    buildingYear: z.number().optional(),
-    parking: z.number().optional(),
+    buildingYear: z.preprocess(
+        (val) =>
+            val === "" || val === null || val === undefined
+                ? undefined
+                : Number(val),
+        z.number().optional()
+    ),
+    parking: z.preprocess(
+        (val) =>
+            val === "" || val === null || val === undefined
+                ? undefined
+                : Number(val),
+        z.number().optional()
+    ),
 });
 
 export const CreateApartmentForm = ({ onCancel }: { onCancel: () => void }) => {

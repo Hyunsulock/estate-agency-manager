@@ -26,6 +26,7 @@ import {
     Search,
     Settings,
     UsersIcon,
+    Warehouse,
 } from "lucide-react";
 import { NavUser } from "./navUser";
 import { useCreateModal } from "@/hooks/useCreateModal";
@@ -65,7 +66,7 @@ const items = [
     {
         title: "Apartments",
         url: "/apartments",
-        icon: Settings,
+        icon: Warehouse,
     },
     {
         title: "Members",

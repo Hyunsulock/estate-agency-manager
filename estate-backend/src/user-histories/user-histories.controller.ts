@@ -4,6 +4,7 @@ import { CreateUserHistoryDto } from './dto/create-user-history.dto';
 import { UpdateUserHistoryDto } from './dto/update-user-history.dto';
 import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
 import { SearchUserHistoriesDto } from './dto/search-user-history.dto';
+import { UserId } from 'src/users/decorator/user-id.decorator';
 
 @Controller('user-histories')
 export class UserHistoriesController {
@@ -20,16 +21,23 @@ export class UserHistoriesController {
     return this.userHistoriesService.searchHistories(query, agencyId);  
   }
 
+  @Get('activity')
+  userActicity(@UserId() userId: number) {
+    return this.userHistoriesService.userActivityInLast30Days(userId);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.userHistoriesService.findOne(+id);
   }
 
 
-  @Get('activity/:id')
-  userActicity(@Param('id') id: string) {
-    return this.userHistoriesService.userActivityInLast30Days(+id);
-  }
+
+
+  // @Get('activity')
+  // userActicity(@UserId() userId: number) {
+  //   return this.userHistoriesService.userActivityInLast30Days(userId);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string, @AgencyId() agencyId: number) {

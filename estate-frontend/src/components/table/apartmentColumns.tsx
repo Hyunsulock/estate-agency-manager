@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { apartmentFuntionButton } from "./tableFunctions/apartmentTableFunction";
-
+import { headerFc } from "./tableFunctions/headerFunction";
+import { format } from "date-fns";
 export type Apartment = {
     id: number;
     name: string;
@@ -13,23 +14,27 @@ export type Apartment = {
 export const apartmentColumns: ColumnDef<Apartment>[] = [
     {
         accessorKey: "name",
-        header: "Name",
+        header: ({ column }) => headerFc(column, "Name"),
     },
     {
         accessorKey: "address",
-        header: "Address",
+        header: ({ column }) => headerFc(column, "Address"),
     },
     {
-        accessorKey: "bulidingYear",
-        header: "BulidingYear",
+        accessorKey: "buildingYear",
+        header: ({ column }) => headerFc(column, "BuildingYear"),
     },
     {
         accessorKey: "parking",
-        header: "Parking",
+        header: ({ column }) => headerFc(column, "Parking"),
     },
     {
         accessorKey: "createdAt",
-        header: "Parking",
+        header: ({ column }) => headerFc(column, "CreatedAt"),
+        cell: ({ row }) =>
+            row.original.createdAt
+                ? format(new Date(row.original.createdAt), "yyyy-MM-dd")
+                : "-",
     },
     apartmentFuntionButton,
 ];

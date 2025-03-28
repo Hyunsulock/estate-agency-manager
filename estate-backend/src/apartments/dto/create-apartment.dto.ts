@@ -5,16 +5,16 @@ export class CreateApartmentDto {
     @IsString()
     name: string;
 
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     address?: string;
 
     @IsOptional()
     @IsNumber()
-    bulidingYear?: string;
+    buildingYear?: number;
 
     @IsOptional()
     @IsNumber()
-    parking?: string;
+    parking?: number;
 
 }

@@ -8,6 +8,7 @@ export const useCreateApartment = () => {
     const mutation = useMutation({
         mutationFn: async ({ form }: any) => {
             const session = await getAccessSession();
+            console.log(form)
             const response = await fetch(Backend_URL + "/apartments", {
                 method: "POST",
                 headers: {

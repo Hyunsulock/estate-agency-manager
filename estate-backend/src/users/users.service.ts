@@ -1,3 +1,4 @@
+import { RoleInt } from './decorator/role.decorator';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -145,7 +146,7 @@ export class UsersService {
   }
 
 
-  async updateUserRole(id: number, updateUserRole: UpdateUserRoleDto, agencyId: number) {
+  async updateUserRole(id: number, updateUserRole: UpdateUserRoleDto, agencyId: number, roleInt: number) {
     const { role } = updateUserRole;
 
     const agency = await this.agencyRepository.findOne({
@@ -157,8 +158,17 @@ export class UsersService {
     if (agency) {
       const staff = await this.userRepository.findOne({ where: { id }, relations: ['agency'] },);
 
+
       if (!staff) {
         throw new NotFoundException('no user found');
+      }
+
+      if (staff.role > roleInt) {
+        throw new BadRequestException('role is assigned beyond the authorization');
+      }
+
+      if (roleInt > role) {
+        throw new BadRequestException('role is assigned beyond the authorization');
       }
 
       if (staff.agency.id !== agency.id) {
@@ -175,19 +185,19 @@ export class UsersService {
   }
 
   async remove(id: number) {
-      const user = await this.userRepository.findOne({
-        where: {
-          id,
-        }
-      });
-
-      if (!user) {
-        throw new NotFoundException('존재하지 않는 사용자입니다!');
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
       }
+    });
 
-
-      await this.userRepository.delete(id);
-
-      return id;
+    if (!user) {
+      throw new NotFoundException('존재하지 않는 사용자입니다!');
     }
+
+
+    await this.userRepository.delete(id);
+
+    return id;
   }
+}

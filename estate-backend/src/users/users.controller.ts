@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { UserId } from './decorator/user-id.decorator';
 import { AgencyId } from 'src/agencies/decorator/agency-id.decorator';
+import { RoleInt } from './decorator/role.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -31,8 +32,8 @@ export class UsersController {
   }
 
   @Patch(':id/role')
-  updateRole(@Param('id', ParseIntPipe) id: number, @Body() updateUserRole: UpdateUserRoleDto, @AgencyId() agencyId: number) {
-    return this.usersService.updateUserRole(id, updateUserRole, agencyId);
+  updateRole(@Param('id', ParseIntPipe) id: number, @Body() updateUserRole: UpdateUserRoleDto, @AgencyId() agencyId: number, @RoleInt() roleInt: number) {
+    return this.usersService.updateUserRole(id, updateUserRole, agencyId, roleInt);
   }
 
   @Delete(':id')
