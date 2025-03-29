@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetUser } from "@/app/lib/useGetFunctions/useGetUser";
 import { useUpdateUser } from "@/app/lib/useMutationFunctions/useUpdateUser";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react"; // ✅ 세션 훅
+import { useSession } from "next-auth/react"; 
 
 import {
     Form,

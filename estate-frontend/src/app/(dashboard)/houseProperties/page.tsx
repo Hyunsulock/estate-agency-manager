@@ -1,12 +1,4 @@
-import {
-    dehydrate,
-    HydrationBoundary,
-    QueryClient,
-} from "@tanstack/react-query";
-import { getHouseProperties } from "@/app/lib/queryFunctions/getHouseProperties";
-import HousePropertyLists from "./_component/housePropertyList";
 import { TableSwitcher } from "./_component/tableSwitcher";
-import { Suspense } from "react";
 import { HousePropertyStatus } from "@/components/table/types";
 type Props = {
     searchParams: { [key: string]: string | string[] | undefined };
