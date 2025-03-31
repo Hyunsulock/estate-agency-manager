@@ -24,6 +24,7 @@ const user = {
   comments: null,
   createdAt: null,
   updatedAt: null,
+  userHistory: null,
 };
 
 describe('UsersService', () => {
@@ -184,7 +185,7 @@ describe('UsersService', () => {
         "location": "seoul",
         "phoneNumber": "0102345893",
         apartments: null,
-        staffs: null, offers: null, houseProperties: null, customers: null, comments: null
+        staffs: null, offers: null, houseProperties: null, customers: null, comments: null, history: null
       };
 
 

@@ -6,7 +6,7 @@ import { HouseProperty } from './entities/house-property.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Apartment } from 'src/apartments/entities/apartment.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Role, User } from 'src/users/entities/user.entity';
 import { Agency } from 'src/agencies/entities/agency.entity';
 import { HousePropertyUserSaved } from './entities/house-property-user-saved.entity';
 import { Customer } from 'src/customers/entities/customer.entity';
@@ -14,6 +14,7 @@ import { UpdatesGateway } from 'src/updates/updates.gateway';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { CreateHousePropertyWithOfferDto } from './dto/create-house-with-offer.dto';
 import { UserHistoriesService } from 'src/user-histories/user-histories.service';
+import { RBAC } from 'src/auth/decorator/rbac.decorator';
 
 @Injectable()
 export class HousePropertiesService {
@@ -415,7 +416,7 @@ export class HousePropertiesService {
 
     return updatedHouseProperty;
   }
-
+  @RBAC(Role.manager) 
   async remove(id: number, userId: number, agencyId: number) {
     const houseProperty = await this.housePropertyRepository.findOne({
       where: {

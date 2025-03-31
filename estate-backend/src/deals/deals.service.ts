@@ -7,11 +7,12 @@ import { Repository } from 'typeorm';
 import { Agency } from 'src/agencies/entities/agency.entity';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { HouseProperty } from 'src/house-properties/entities/house-property.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Role, User } from 'src/users/entities/user.entity';
 import { Customer } from 'src/customers/entities/customer.entity';
 import { SearchDealDto } from './dto/search-deal.dto';
 import { UpdatesGateway } from 'src/updates/updates.gateway';
 import { UserHistoriesService } from 'src/user-histories/user-histories.service';
+import { RBAC } from 'src/auth/decorator/rbac.decorator';
 
 @Injectable()
 export class DealsService {
@@ -55,20 +56,15 @@ export class DealsService {
 
     const seller = await this.customerRepository.findOne({ where: { id: sellerId } });
 
-    if (!seller) {
-      throw new NotFoundException(`seller with ID ${sellerId} not found`);
+    if (seller) {
+      dealCrerateParams.seller = seller;
     }
-
-    dealCrerateParams.seller = seller;
 
     const buyer = await this.customerRepository.findOne({ where: { id: buyerId } });
 
-    if (!buyer) {
-      throw new NotFoundException(`buyer with ID ${buyerId} not found`);
+    if (buyer) {
+      dealCrerateParams.buyer = buyer;
     }
-
-    dealCrerateParams.buyer = buyer;
-
 
     const sellAgency = await this.agencyRepository.findOne({ where: { id: sellAgencyId } });
 
@@ -193,7 +189,7 @@ export class DealsService {
     return this.dealRepository.findOne({ where: { id }, relations: ['houseProperty', 'houseProperty.apartment', 'offer', 'offer.agency', 'buyAgency', 'sellAgency', 'dealer', 'buyer', 'seller'] });
   }
 
-  async update(id: number, updateDealDto: UpdateDealDto,userId: number, agencyId: number) {
+  async update(id: number, updateDealDto: UpdateDealDto, userId: number, agencyId: number) {
     const { buyAgencyId, sellAgencyId, dealerId, sellerId, buyerId, ...restData } = updateDealDto;
 
 
@@ -290,7 +286,8 @@ export class DealsService {
     return updatedDeal
   }
 
-  async remove(id: number,userId: number, agencyId: number) {
+  @RBAC(Role.manager)
+  async remove(id: number, userId: number, agencyId: number) {
     const deal = await this.dealRepository.findOne({
       where: {
         id,

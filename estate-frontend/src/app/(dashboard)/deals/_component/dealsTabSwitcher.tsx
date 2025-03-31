@@ -39,8 +39,8 @@ export default function DealsTableSwitcher() {
             <Tabs value={filters.tradeType} onValueChange={onTradeTypeChange}>
                 <TabsList className="mb-4">
                     <TabsTrigger value="sale">Sale</TabsTrigger>
-                    <TabsTrigger value="rent">Rent</TabsTrigger>
                     <TabsTrigger value="jeonse">Jeonse</TabsTrigger>
+                    <TabsTrigger value="rent">Rent</TabsTrigger>
                 </TabsList>
                 <DealDataFilters />
                 <TabsContent value={filters.tradeType ?? "all"}>

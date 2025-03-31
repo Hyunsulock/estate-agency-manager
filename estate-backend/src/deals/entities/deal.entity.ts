@@ -17,10 +17,10 @@ export class Deal extends BaseTable {
     @JoinColumn({ name: 'offer_id' })
     offer: Offer;
 
-    @ManyToOne(() => Customer)
+    @ManyToOne(() => Customer, { nullable: true })
     buyer: Customer;
 
-    @ManyToOne(() => Customer)
+    @ManyToOne(() => Customer, { nullable: true })
     seller: Customer;
 
     @ManyToOne(() => Agency)

@@ -3,13 +3,14 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { Role, User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { envVariableKeys } from 'src/common/const/env.const';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { Agency } from 'src/agencies/entities/agency.entity';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
+import { RBAC } from 'src/auth/decorator/rbac.decorator';
 
 @Injectable()
 export class UsersService {
@@ -62,7 +63,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('존재하지 않는 사용자입니다!');
+      throw new NotFoundException('user does not exist!');
     }
 
     return user
@@ -91,7 +92,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('존재하지 않는 사용자입니다!');
+      throw new NotFoundException('user does not exist!');
     }
 
     let data = {}
@@ -145,7 +146,7 @@ export class UsersService {
     });
   }
 
-
+  @RBAC(Role.manager)
   async updateUserRole(id: number, updateUserRole: UpdateUserRoleDto, agencyId: number, roleInt: number) {
     const { role } = updateUserRole;
 
@@ -192,7 +193,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('존재하지 않는 사용자입니다!');
+      throw new NotFoundException('user does not exist!');
     }
 
 

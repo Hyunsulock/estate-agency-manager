@@ -21,7 +21,7 @@ export const GlobalSocketListener = () => {
         });
     }, []);
 
-    const { data: user } = useSession(); // Get the user from the query
+    const { data: user } = useSession(); 
     const userId = user?.id;
 
     const handleHouseProperty = useCallback(

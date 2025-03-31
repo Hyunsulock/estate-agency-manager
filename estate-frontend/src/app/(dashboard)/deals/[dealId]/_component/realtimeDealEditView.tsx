@@ -168,7 +168,6 @@ export const RealtimeDealEditView = ({
             </CardHeader>
             <CardContent>
                 <div className="grid gap-4">
-                    {/* Deal Date */}
                     <div className="grid gap-2">
                         <Label>Deal Date</Label>
                         <Popover>
@@ -211,7 +210,6 @@ export const RealtimeDealEditView = ({
                         </Popover>
                     </div>
 
-                    {/* Dynamic select fields */}
                     {["buyAgencyId", "sellAgencyId", "buyerId", "sellerId"].map(
                         (field) => (
                             <div key={field} className="grid gap-2">

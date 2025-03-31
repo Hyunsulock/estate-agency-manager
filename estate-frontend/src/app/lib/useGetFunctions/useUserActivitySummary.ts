@@ -51,5 +51,6 @@ export const useUserActivitySummary = () => {
                 updateDeleteChart,
             };
         },
+        staleTime: 0
     });
 };

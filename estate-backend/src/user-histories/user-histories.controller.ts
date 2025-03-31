@@ -33,12 +33,6 @@ export class UserHistoriesController {
 
 
 
-
-  // @Get('activity')
-  // userActicity(@UserId() userId: number) {
-  //   return this.userHistoriesService.userActivityInLast30Days(userId);
-  // }
-
   @Delete(':id')
   remove(@Param('id') id: string, @AgencyId() agencyId: number) {
     return this.userHistoriesService.remove(+id);

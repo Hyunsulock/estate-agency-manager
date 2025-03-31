@@ -48,8 +48,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         return () => {
             socket?.disconnect();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status, session?.accessToken]); // run once on mount
+        
+    }, [status, session?.accessToken]); 
 
     return (
         <SocketContext.Provider value={socket}>

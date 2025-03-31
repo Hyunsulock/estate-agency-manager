@@ -7,25 +7,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UpdatesService {
-
-    // private activeEditors: Record<
-    //     string,
-    //     Record<
-    //         string,
-    //         Record<
-    //             string,
-    //             Record<
-    //                 string,
-    //                 {
-    //                     updatedBy: number;
-    //                     name: string;
-    //                     email: string;
-    //                 }
-    //             >
-    //         >
-    //     >
-    // > = {};
-
     activeEditors: {
         [agencyId: number]: {
             [type: string]: {
@@ -56,7 +37,6 @@ export class UpdatesService {
         }
 
         if (userData.agency) {
-            // Make sure agency exists (optional safety check)
             const agency = await this.agencyRepository.findOne({
                 where: { id: userData.agency },
             });
@@ -67,11 +47,10 @@ export class UpdatesService {
                 );
             }
 
-            // Join agency room
             const roomName = `agency/${userData.agency}`;
             client.join(roomName);
 
-            // Optionally store user's agency on client data for easy reference
+
             client.data.user = {
                 ...userData,
                 name: user.name,
@@ -80,11 +59,10 @@ export class UpdatesService {
             };
             console.log(client.data.user)
         } else {
-            // Join personal room
             const roomName = `user/${userData.sub}`;
             client.join(roomName);
 
-            // Optionally store user's agency on client data for easy reference
+
             client.data.user = {
                 ...userData,
                 name: user.name,
@@ -120,8 +98,6 @@ export class UpdatesService {
             agencyEditors?.[type]?.[id]?.[field]?.updatedBy === user.sub
         ) {
             delete agencyEditors[type][id][field];
-
-            // Clean up empty objects
             if (Object.keys(agencyEditors[type][id]).length === 0) {
                 delete agencyEditors[type][id];
             }

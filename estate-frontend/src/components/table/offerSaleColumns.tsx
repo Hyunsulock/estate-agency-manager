@@ -8,7 +8,7 @@ export const offerSaleColumns: ColumnDef<any>[] = [
         accessorKey: "status",
         header: "Status",
         cell: ({ row }) => {
-            const currentStatus = row.original.status; // Get current status from row
+            const currentStatus = row.original.status; 
             const id = row.original.id;
             return (
                 <>

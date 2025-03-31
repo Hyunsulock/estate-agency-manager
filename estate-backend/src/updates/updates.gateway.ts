@@ -17,8 +17,6 @@ export class UpdatesGateway implements OnGatewayConnection, OnGatewayDisconnect 
     const user = client.data.user;
     if (user.agency) {
       const clearedEditors = this.updatesService.clearEditorsByUser(user);
-
-      // Emit 'done_editing' for each cleared editor only
       clearedEditors.forEach((editor) => {
         this.server.to(`agency/${user.agency}`).emit('done_editing', {
           type: editor.type,
@@ -35,14 +33,11 @@ export class UpdatesGateway implements OnGatewayConnection, OnGatewayDisconnect 
 
   async handleConnection(client: Socket) {
     try {
-      // Bearer 'skjcvoizxcjvlzxicv'
-      const rawToken = client.handshake.auth.token;
-      console.log("thisisraw", rawToken)
 
+      const rawToken = client.handshake.auth.token;
       const payload = await this.authService.parseBearerToken(rawToken, false);
       if (payload) {
         client.data.user = payload;
-        // this.chatService.registerClient(payload.sub, client)
         await this.updatesService.joinAgencyRoom(payload, client);
       } else {
         client.disconnect();
@@ -61,7 +56,6 @@ export class UpdatesGateway implements OnGatewayConnection, OnGatewayDisconnect 
   @SubscribeMessage('request_active_editors')
   handleRequestActiveEditors(@ConnectedSocket() client: Socket) {
     const user = client.data.user;
-    console.log('user-requerst', user)
     if (user) {
       const snapshot = this.updatesService.getCurrentEditors(user.agency);
       client.emit('active_editors_snapshot', snapshot);
@@ -76,7 +70,6 @@ export class UpdatesGateway implements OnGatewayConnection, OnGatewayDisconnect 
     this.updatesService.setEditor(user, data);
     console.log('editing')
 
-    // Broadcast editing event to other users
     this.server.except(client.id).to(`agency/${user.agency}`).emit('editing', {
       type: data.type,
       id: data.id,
@@ -107,38 +100,10 @@ export class UpdatesGateway implements OnGatewayConnection, OnGatewayDisconnect 
 
   sendDataUpdate(agencyId: number, event: string, data: any) {
     this.server.to(`agency/${agencyId}`).emit(event, data);
-    console.log('connett')
   }
 
   sendDataUpdatePerson(userId: number, event: string, data: any) {
     this.server.to(`user/${userId}`).emit(event, data);
-    console.log('connett')
   }
 
-  // @SubscribeMessage('editing')
-  // handleEditing(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-  //   const agencyRoom = `agency/${client.data.user.agency}`;
-  //   // Broadcast to everyone in the agency room except the sender
-  //   client.to(agencyRoom).emit('editing', {
-  //     type: data.type,
-  //     field: data.field,
-  //     user: data.user,  // { updatedBy: userId, name: userName }
-  //   });
-  // }
-
-  // // ✅ When frontend emits `done_editing`
-  // @SubscribeMessage('done_editing')
-  // handleDoneEditing(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-  //   const agencyRoom = `agency/${client.data.user.agency}`;
-  //   client.to(agencyRoom).emit('done_editing', {
-  //     type: data.type,
-  //     field: data.field,
-  //   });
-  // }
-
-  // private getAgencyRoomFromClient(client: Socket): string | null {
-  //   const rooms = Array.from(client.rooms);
-  //   const agencyRoom = rooms.find((room) => room.startsWith('agency/'));
-  //   return agencyRoom ?? null;
-  // }
 }

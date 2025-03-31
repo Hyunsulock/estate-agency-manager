@@ -7,6 +7,7 @@ export const useCreateDeal = () => {
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: async ({ form }: any) => {
+            console.log(form)
             const session = await getAccessSession();
             const response = await fetch(Backend_URL + "/deals", {
                 method: "POST",

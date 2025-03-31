@@ -8,7 +8,8 @@ import { HouseProperty } from 'src/house-properties/entities/house-property.enti
 import { Agency } from 'src/agencies/entities/agency.entity';
 import { UpdatesGateway } from 'src/updates/updates.gateway';
 import { UserHistoriesService } from 'src/user-histories/user-histories.service';
-import { User } from 'src/users/entities/user.entity';
+import { Role, User } from 'src/users/entities/user.entity';
+import { RBAC } from 'src/auth/decorator/rbac.decorator';
 
 @Injectable()
 export class OffersService {
@@ -130,7 +131,6 @@ export class OffersService {
 
     const offerUpdateParams: Partial<Offer> = { ...restData };
 
-    // If `housePropertyId` is provided, validate and attach it
     if (housePropertyId) {
       const houseProperty = await this.housePropertyRepository.findOne({ where: { id: housePropertyId } });
 
@@ -194,8 +194,8 @@ export class OffersService {
     return updatedOffer
   }
 
+  @RBAC(Role.manager) 
   async remove(id: number, userId: number, agencyId: number) {
-    console.log('remove', id);
     const offer = await this.offerRepository.findOne({
       where: {
         id,
@@ -206,7 +206,7 @@ export class OffersService {
     if (!offer) {
       throw new NotFoundException('no matching houseProperty');
     }
-    console.log('removed', id);
+
 
 
 

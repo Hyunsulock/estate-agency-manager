@@ -46,11 +46,9 @@ export const handleHousePropertySocket = (
                     const flattenedUpdate = flattenHousePropertyData(
                         message.data
                     );
-
                     const exists = oldData.some(
                         (item: any) => item.id === flattenedUpdate.id
                     );
-
                     if (!exists) {
                         queryClient.invalidateQueries({
                             queryKey: query.queryKey,
@@ -58,9 +56,6 @@ export const handleHousePropertySocket = (
                         console.log("does not exist", query.queryKey);
                         return;
                     }
-
-                    console.log("exits");
-
                     return oldData.map((item: any) =>
                         item.id === flattenedUpdate.id
                             ? { ...item, ...flattenedUpdate }

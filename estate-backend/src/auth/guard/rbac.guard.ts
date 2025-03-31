@@ -22,11 +22,11 @@ export class RBACGuard implements CanActivate {
         // return user.role <= role;
 
         if (!user) {
-            throw new UnauthorizedException(); // Will return 401
+            throw new UnauthorizedException(); //  401
         }
 
         if (user.role > role) {
-            throw new ForbiddenException(); // Will return 403
+            throw new ForbiddenException(); //  403
         }
         return true;
     }

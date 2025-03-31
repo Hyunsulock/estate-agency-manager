@@ -12,7 +12,7 @@ export class DealsController {
 
   @Post()
   create(@Body() createDealDto: CreateDealDto, @UserId() userId : number, @AgencyId() agencyId: number) {
-    return this.dealsService.create(createDealDto, userId, agencyId);
+    return this.dealsService.create(createDealDto, agencyId, userId);
   }
 
   @Get()
